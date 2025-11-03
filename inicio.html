@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIPORAMA | INICIO</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="light-mode">
+  <header>
+    <nav class="navbar navbar-expand-lg custom-navbar">
+      <div class="container-fluid">
+        <!-- Botón hamburguesa -->
+        <button class="navbar-toggler" type="button" id="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+
+        <!--LOGO-->
+        <div class="d-flex align-items-center" href="#inicio">
+          <i class="bi bi-film icon-film"></i>
+          <h1 class="logo">PIPORAMA</h1>
+          <button id="theme-toggle" class="btn btn-theme">
+                <i class="bi bi-moon"></i>
+          </button>
+        </div>
+
+        <!-- Enlaces -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="nav-links navbar-navD">
+
+            <li><a href="#inicio" class="nav-link active nav-linkD">Inicio</a></li>
+
+            <li><a href="#dashboard" class="nav-link nav-linkD">Dashboard</a></li>
+
+            <!-- Dropdown de Consultas -->
+            <li class="nav-item dropdown dropdown-hover">
+              <a class="nav-link dropdown-toggle" href="#" id="consultasDropdown" role="button">
+                Consultas
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="consultasDropdown">
+                <li><a class="dropdown-item nav-linkD" href="#empleados">Empleados</a></li>
+                <li><a class="dropdown-item nav-linkD" href="#clientes">Clientes</a></li>
+                <li><a class="dropdown-item nav-linkD" href="#facturas">Facturas</a></li>
+              </ul>
+            </li>
+
+            <!-- Usuario -->
+            <li class="dropdown dropdown-hover">
+              <a class="dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button">
+                <i class="bi bi-person-circle me-1"></i> <span class="username">Usuario</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <li class="dropdown-item-text text-muted small">usuario@cinecontrol.com</li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item cerrar text-danger" href="#">Cerrar sesión</a></li>
+              </ul>
+            </li>
+
+            
+        </ul>
+        </div>
+      
+      </div>
+    </nav>
+  </header>
+  <div id="main-content">
+    <!-- El contenido se cargará dinámicamente aquí -->
+  </div>
+  <footer class="footer mt-auto">
+  <div class="container text-center">
+    <p>© 2025 CineControl — Sistema de Administración de Cines</p>
+    <small>Desarrollado por el equipo PIPORAMA</small>
+    <div class="mt-2">
+      <a href="#">GitHub</a>
+      <a href="#">Contacto</a>
+    </div>
+  </div>
+</footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/home.js"></script>
+<script src="js/navigation.js"></script>
+</body>
+</html>

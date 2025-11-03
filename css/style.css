@@ -1,0 +1,855 @@
+:root {
+  /* Paleta general */
+    --radius: 12px;
+    --transition: all 0.3s ease;
+    --font-title: 'Poppins', sans-serif;
+    --font-body: 'Inter', sans-serif;
+
+    /* Tema oscuro (por defecto) */
+    --color-bg: #0b0b10;
+    --color-surface: #161623;
+    --color-text: #f2f2f2;
+    --color-muted: #a1a1a1;
+    --primary: #1152d4;
+    --secondary: #00d4ff;
+    --accent: #7b5cff;
+    --shadow-glow: 0 0 12px rgba(123, 92, 255, 0.6);
+}
+
+[data-theme="light-mode"] {
+    --color-bg: #f7f7f7;
+    --color-surface: #ffffff;
+    --color-text: #1a1a1a;
+    --color-muted: #555;
+    --primary: #1152d4;
+    --secondary: #00aaff;
+    --accent: #7b5cff;
+    --shadow-glow: 0 0 8px rgba(92, 58, 255, 0.3);
+}
+
+/* ---------Fondo general------------- */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --------------------------------------Navbar------------------------------- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 3rem;
+    padding-top: 1.5rem;
+    background: var(--color-surface);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.home::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent), var(--primary));
+    background-size: 300%;
+    animation: lightFlow 5s linear infinite;
+}
+
+/* Animación del glow superior */
+@keyframes lightFlow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+/* Logo */
+.logo {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--secondary);
+}
+
+/* Botón hamburguesa */
+.navbar-toggler {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    flex-shrink: 0; /* Evitar que se encoja */
+}
+
+.hamburger-line {
+    width: 25px;
+    height: 3px;
+    background-color: var(--color-text);
+    margin: 2px 0;
+    transition: 0.3s;
+    transform-origin: center;
+}
+
+/* Animación del hamburger a X */
+.navbar-toggler.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.navbar-toggler.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.navbar-toggler.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Enlaces */
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links a {
+    position: relative;
+    text-decoration: none;
+    color: var(--color-text);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: var(--transition);
+}
+
+/* Efecto de luz al hover */
+.nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        var(--primary),
+        var(--secondary),
+        var(--accent),
+        var(--primary)
+    );
+    background-size: 300%;
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s ease-out;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+    transform: scaleX(1);
+    transform-origin: left;
+    animation: lightMove 3s linear infinite;
+}
+
+/* Animación tipo fuego/luz desplazándose */
+@keyframes lightMove {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+/* Hover en texto */
+.nav-links a:hover {
+    color: var(--secondary);
+    text-shadow: 0 0 8px var(--secondary);
+}
+.icon-film {
+    font-size: 1.2rem;
+    color: var(--secondary);
+    display: block;
+    text-align: center;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/*Dropdown*/
+.dropdown-menu {
+    background-color: var(--color-surface);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    transition: var(--transition);
+    margin-top: 0.6rem;
+}
+
+.dropdown-item:hover {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+}
+
+/* Dropdown visible con hover */
+.dropdown-hover:hover > .dropdown-menu {
+    display: block;
+    margin-top: 0;
+}
+
+/*Boton(claro/oscuro)*/
+.btn-theme {
+    background: transparent;
+    border: none;
+    color: var(--color-text);
+    font-size: 1.4rem;
+    transition: var(--transition);
+}
+
+.btn-theme:hover {
+    color: var(--secondary);
+    transform: rotate(20deg);
+}
+
+/*Usuario*/
+.username {
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.dropdown-menu-end {
+    right: 0;
+    background-color: var(--color-surface);
+}
+
+/*Texto correo*/
+.dropdown-item-text {
+    color: var(--color-text);
+    font-style: italic;
+}
+
+.dropdown-divider {
+    border-color: var(--color-muted);
+}
+
+
+/**/
+/* Tema claro (cuando body tiene la clase .light-mode) */
+body.light-mode {
+    --color-bg: #f8f9fb;
+    --color-surface: #ffffff;
+    --color-text: #1e1e1e;
+    --color-muted: #6c757d;
+    --primary: #1152d4;
+    --secondary: #00b4d8;
+    --accent: #5a6ff0;
+    --shadow-glow: 0 0 10px rgba(17, 82, 212, 0.25);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+}
+
+/* Transición suave entre temas */
+body {
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* ====== 🌙 BOTÓN DE TEMA ====== */
+
+.btn-theme {
+    background: transparent;
+    border: none;
+    color: var(--color-text);
+    font-size: 1.4rem;
+    transition: transform 0.4s ease, color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+}
+
+/* Efecto de rotación al hacer clic */
+.btn-theme:active {
+    transform: rotate(180deg);
+}
+
+/* ====== ICONO DINÁMICO (luna ↔ sol) ====== */
+
+/* Estado por defecto (modo oscuro → muestra luna) */
+.btn-theme::before {
+    content: "\f186"; /* Luna (Bootstrap Icon: bi-moon) */
+    font-family: "bootstrap-icons";
+    font-size: 1.3rem;
+    transition: all 0.4s ease;
+}
+
+/* Cuando cambia a modo claro → se transforma en sol */
+body.light-mode .btn-theme::before {
+    content: "\f185"; /* Sol (Bootstrap Icon: bi-sun) */
+    color: var(--primary);
+    transform: rotate(360deg);
+}
+
+/*------------------------------Pagina Inicio--------------------------*/
+.home {
+    flex: 1;
+    background: var(--color-bg);
+    color: var(--color-text);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    min-height: calc(100vh - 200px); /* Ajustar según altura del navbar y footer */
+}
+
+.neon-title {
+    font-size: 2.5rem;
+    color: var(--accent);
+}
+
+.neon-title span {
+    color: var(--secondary);
+    font-weight: 700;
+}
+
+.btn-home-primary {
+    color: var(--color-text);
+    border: 1px solid var(--primary);
+    background: var(--primary);
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius);
+
+}
+
+.btn-home-primary:hover {
+    color: var(--color-text);
+    border: 1px solid var(--primary);
+    background: transparent;
+    transition: var(--transition);
+}
+
+.footer {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/*----------------------------------Footer---------------------------------------*/
+.footer {
+    background: var(--color-surface);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-text);
+    font-family: 'Poppins', sans-serif;
+    padding: 1.5rem 0;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+    margin-top: auto; /* Esto empuja el footer al final */
+}
+
+/* Contenedor principal que toma el espacio disponible */
+#main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Asegurar que las páginas internas también tomen el espacio necesario */
+#main-content > main {
+    flex: 1;
+}
+
+/* Contenedor interno (usando .container de Bootstrap) */
+.footer .container {
+    max-width: 1200px;
+}
+
+/* Texto principal */
+.footer p {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.3px;
+}
+
+/* Texto secundario o créditos */
+.footer small {
+    font-size: 0.8rem;
+    color: var(--accent);
+    opacity: 0.8;
+}
+
+/* Enlaces */
+.footer a {
+    color: var(--accent);
+    text-decoration: none;
+    margin: 0 0.8rem;
+    transition: var(--transition);
+    font-weight: 500;
+}
+
+.footer a:hover {
+    color: var(--secondary);
+}
+
+/* Línea de glow superior (efecto neon sutil) */
+.footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent), var(--primary));
+    background-size: 300%;
+    animation: lightFlow 5s linear infinite;
+}
+
+/* Animación del glow superior */
+@keyframes lightFlow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+/* ----------------------------------Pagina LOGIN--------------------------------- */
+
+/* Animación para el degradado del título */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.icon-login {
+    font-size: 3.5rem;
+    display: block;
+    text-align: center;
+    margin-bottom: 1rem;
+    background: linear-gradient(
+        270deg,
+        var(--primary),
+        var(--secondary),
+        var(--accent),
+        var(--primary),
+        var(--secondary),
+        var(--accent),
+        var(--primary)
+    );
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 5s ease-in-out infinite;
+}
+.card-login {
+    width: 400px;
+    max-width: 90vw; 
+    background-color: var(--color-surface) !important;
+    border-radius: 1.5rem !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    color: var(--color-text);
+    border: none;
+    padding: 2rem;
+}
+
+.card-login .card-title {
+    font-family: var(--font-title);
+    font-size: 2rem;
+    background: linear-gradient(
+        270deg,
+        var(--primary),
+        var(--secondary),
+        var(--accent),
+        var(--primary),
+        var(--secondary),
+        var(--accent),
+        var(--primary)
+    );
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 5s ease-in-out infinite;
+}
+
+.card-body p {
+    font-size: 0.8rem;
+}
+
+.card-login .card-text {
+    font-family: var(--font-body);
+    color: var(--color-text);
+    opacity: 0.9;
+}
+
+.inputs {
+    font-family: var(--font-body);
+    background-color: #2c2c3e !important;
+    border: none !important;
+    color: var(--color-text) !important;
+}
+
+/* Estilos para el icono de mostrar/ocultar contraseña */
+#togglePassword {
+    color: var(--color-text) !important;
+    transition: var(--transition);
+    z-index: 10;
+}
+
+#togglePassword:hover {
+    color: var(--primary) !important;
+    transform: scale(1.1);
+}
+
+#togglePassword:focus {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/*----------------------------------------------------- SECCION CLIENTES */
+/* Contenedor */
+.main-clientes {
+    margin: 0 auto;
+    max-width: 1400px;
+    padding: 1rem 2rem;
+}
+/* Título  */
+h2 {
+    color: var(--color-text);
+}
+
+/* Input de búsqueda */
+.input-group-text {
+    background-color: var(--color-surface);
+    border-color: var(--color-surface);
+    color: var(--color-muted);
+}
+
+.form-control {
+    background-color: var(--color-surface);
+    border-color: var(--color-surface);
+    color: var(--color-text);
+}
+
+.form-control::placeholder {
+    color: var(--color-muted);
+    opacity: 0.7;
+}
+
+.form-control:focus {
+    background-color: var(--color-surface);
+    border-color: var(--primary);
+    color: var(--color-text);
+    box-shadow: var(--shadow-glow);
+}
+
+/* Botones */
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+.btn-primary:hover {
+    background-color: color-mix(in srgb, var(--primary) 85%, black);
+    border-color: color-mix(in srgb, var(--primary) 85%, black);
+}
+
+/* Tabla  */
+.table-dark {
+    --bs-table-bg: var(--color-surface);
+    --bs-table-color: var(--color-text);
+    --bs-table-border-color: rgba(255, 255, 255, 0.1);
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+}
+
+/* Paginación (nose si dejarlo o no) */
+.pagination-dark .page-link {
+    background-color: var(--color-surface);
+    border-color: var(--color-surface);
+    color: var(--color-text);
+}
+
+.pagination-dark .page-link:hover {
+    background-color: var(--color-surface);
+    border-color: var(--color-surface);
+    color: var(--color-text);
+}
+
+.pagination-dark .page-item.active .page-link {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+
+
+/*----------------------------RESPONSIVE---------------------------*/
+@media (max-width: 991px) {
+
+    /* Navbar */
+    .custom-navbar {
+        padding: 0.8rem 1.5rem;
+    }
+
+    .custom-navbar .container-fluid {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    /* Mostrar botón hamburguesa */
+    .navbar-toggler {
+        display: flex;
+        flex-shrink: 0;
+    }
+
+    /* Centrar el logo en móviles */
+    .custom-navbar .d-flex {
+        flex: 1;
+        justify-content: center;
+    }
+
+    /* Ocultar menú por defecto */
+    .navbar-collapse {
+        position: fixed;
+        top: 0;
+        left: -300px; /* Oculto fuera de la pantalla */
+        width: 280px;
+        height: 100vh;
+        background-color: var(--color-surface);
+        backdrop-filter: blur(12px);
+        /* border-right: 1px solid rgba(255,255,255,0.1); */
+        padding: 2rem 1rem;
+        z-index: 1050;
+        transition: left 0.3s ease-in-out;
+        overflow-y: auto;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+    }
+
+    /* Mostrar menú cuando está activo */
+    .navbar-collapse.show {
+        left: 0; /* Desliza desde la izquierda */
+    }
+
+    /* Overlay semitransparente detrás del menú */
+    .navbar-collapse::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        pointer-events: none;
+    }
+
+    .navbar-collapse.show::before {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .navbar-brand.logo {
+        font-size: 1.3rem;
+    }
+
+
+    .nav-links {
+        flex-direction: column;
+        text-align: left;
+        gap: 0.5rem;
+        margin: 0;
+        padding: 0;
+        margin-top: 1rem;
+    }
+
+    .nav-links li {
+        margin: 0.3rem 0;
+        width: 100%;
+    }
+
+    /* Enlaces del sidebar */
+    .nav-links a {
+        padding: 1rem;
+        border-radius: var(--radius);
+        display: flex;
+        align-items: center;
+        margin: 0.3rem 0;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus {
+        background-color: rgba(255,255,255,0.1);
+        transform: translateX(5px);
+    }
+
+    .nav-links a.active {
+        background-color: rgba(var(--secondary), 0.2);
+        color: var(--secondary);
+    }
+
+    /* Dropdown en sidebar */
+    .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        background-color: rgba(0,0,0,0.2);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: var(--radius);
+        margin: 0.5rem 0 0.5rem 1rem;
+        display: none;
+        animation: slideInLeft 0.3s ease-in-out;
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* En móviles, usar click en lugar de hover para dropdowns */
+    .dropdown-hover:hover > .dropdown-menu,
+    .dropdown.show > .dropdown-menu,
+    .dropdown-toggle.active + .dropdown-menu {
+        display: block;
+    }
+
+    .dropdown-item {
+        padding: 0.8rem 1rem;
+        color: var(--color-text);
+        font-size: 0.9rem;
+    }
+
+    .dropdown-item:hover {
+        background-color: rgba(255,255,255,0.1);
+        color: var(--secondary);
+    }
+
+    /* Botón de tema y usuario */
+    .btn-theme {
+        font-size: 1.2rem;
+    }
+
+    .username {
+        display: none; /* en móviles solo se muestra el icono */
+    }
+
+    /* Contenedor clientes en tablets */
+    .main-clientes {
+        padding: 2rem 2rem;
+    }
+}
+
+    /* Celulares (≤ 576px) */
+    @media (max-width: 576px) {
+    
+    /* Ajustar paddings generales */
+    body {
+        padding: 0 0.5rem;
+    }
+
+    /* Navbar más compacto */
+    .custom-navbar {
+        padding: 0.6rem 1rem;
+    }
+
+    .custom-navbar .container-fluid {
+        gap: 0.8rem;
+    }
+
+    .logo {
+        font-size: 1.2rem;
+    }
+
+    .navbar-toggler {
+        width: 28px;
+        height: 28px;
+    }
+
+    .hamburger-line {
+        width: 22px;
+        height: 2px;
+    }
+
+    /* Sidebar más estrecho en móviles pequeños */
+    .navbar-collapse {
+        width: 260px;
+        left: -260px;
+        padding: 1.5rem 0.8rem;
+    }
+
+    /* Home / Bienvenida */
+    .home h1 {
+        font-size: 1.6rem;
+    }
+
+    .home p {
+        font-size: 0.95rem;
+    }
+
+    .btn-neon {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    /* Footer */
+    .footer {
+        padding: 0.8rem;
+        font-size: 0.85rem;
+        margin-top: auto; /* Mantener al final en móviles */
+    }
+
+    .footer a {
+        display: block;
+        margin: 0.4rem 0;
+    }
+
+    /* Ajustar altura mínima en móviles */
+    .home {
+        min-height: calc(100vh - 150px);
+    }
+
+    /* Enlaces del sidebar más compactos */
+    .nav-links a {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .dropdown-item {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    /* Navbar */
+    .custom-navbar::after {
+        height: 2px; /* línea de fuego más fina */
+    }
+    }
+
+    /* Pantallas grandes (≥ 1200px) */
+    @media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+    .logo {
+        font-size: 1.8rem;
+    }
+}
