@@ -21,9 +21,9 @@ const sections = {
                 <div class="d-flex">
                 <div class="input-group me-2">
                     <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control" placeholder="Buscar por nombre, email o ID...">
+                    <input type="text" class="form-control"  placeholder="Buscar por DNI..." id="buscar-cliente">
                 </div>
-                <button class="btn btn-primary d-flex align-items-center" type="button" id="boton-saludar">
+                <button class="btn btn-primary d-flex align-items-center" type="button" id="boton-buscar">
                     <i class="bi bi-search me-2"></i>Buscar
                 </button>
                 </div>
@@ -92,6 +92,10 @@ function navigateTo(page) {
                 <a href="#inicio" class="btn btn-primary nav-linkD">Volver al inicio</a>
             </main>
         `;
+    }
+    if (page === 'clientes') {
+        cargarClientes();
+        setupClientesListeners();
     }
     
     // Actualizar estado activo del navbar
