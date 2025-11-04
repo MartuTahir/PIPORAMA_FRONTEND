@@ -54,7 +54,7 @@ const sections = {
             </div>
 
             <div class="d-flex justify-content-between align-items-center mt-4">
-            <div class="text-white" id="total-clientes">
+            <div class="text-result" id="total-clientes">
                 Mostrando 0 de 0 resultados
             </div>
             <nav aria-label="Paginación de clientes">

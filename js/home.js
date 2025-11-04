@@ -1,9 +1,81 @@
+// ====== VERIFICACIÓN DE AUTENTICACIÓN ======
+function checkAuth() {
+    const token = localStorage.getItem("authToken");
+    const userName = localStorage.getItem("userName");
+    
+    if (!token) {
+        // Si no hay token, redirigir al login
+        window.location.href = "index.html";
+        return false;
+    }
+    
+    // Opcional: Mostrar el nombre del usuario en la interfaz
+    const userElement = document.getElementById('nombre-user');
+    userElement.textContent = userName || 'Usuario';
+
+    return true;
+}
+
+// ====== SISTEMA DE TEMAS ======
+function initTheme() {
+    const body = document.body;
+    
+    // Verificar si hay una preferencia guardada, si no, usar tema oscuro por defecto
+    const savedTheme = localStorage.getItem("theme");
+    
+    if (savedTheme === "light") {
+        body.classList.add("light-mode");
+    } else {
+        // Por defecto tema oscuro (no agregar ninguna clase)
+        // Asegurarse de que no tenga la clase light-mode
+        body.classList.remove("light-mode");
+        localStorage.setItem("theme", "dark");
+    }
+}
+
+// Inicializar al cargar la página
+document.addEventListener("DOMContentLoaded", () => {
+    // Verificar autenticación primero
+    if (checkAuth()) {
+        // Solo inicializar tema si está autenticado
+        initTheme();
+    }
+});
+
+// Funcionalidad del botón de cambio de tema
 const themeToggle = document.getElementById("theme-toggle");
 const body = document.body;
 
-themeToggle.addEventListener("click", () => {
-    body.classList.toggle("light-mode");
-});
+if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+        body.classList.toggle("light-mode");
+        
+        // Guardar la preferencia del usuario
+        if (body.classList.contains("light-mode")) {
+            localStorage.setItem("theme", "light");
+        } else {
+            localStorage.setItem("theme", "dark");
+        }
+    });
+}
+
+// ====== FUNCIONALIDAD DE LOGOUT ======
+const logoutButton = document.querySelector(".cerrar");
+if (logoutButton) {
+    logoutButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        
+        // Confirmar logout
+        if (confirm("¿Estás seguro de que quieres cerrar sesión?")) {
+            // Limpiar datos de sesión
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("userName");
+            
+            // Redirigir al login
+            window.location.href = "index.html";
+        }
+    });
+}
 
 // Funcionalidad del menú hamburguesa
 const navbarToggler = document.getElementById("navbarToggler");
