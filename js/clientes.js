@@ -33,9 +33,19 @@
                     <td>${cliente.dniCliente}</td>
                     <td>${estado}</td> 
                     <td>
-                    <button class="btn btn-sm btn-outline-info me-1"><i class="bi bi-pencil"></i></button>
-                    <button class="btn btn-sm btn-outline-danger me-1"><i class="bi bi-trash"></i></button>
-                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i></button>
+                    <button class="btn btn-sm btn-outline-info me-1 btn-editar"
+                    data-codigo="${cliente.codigo}"
+                    data-dni="${cliente.dniCliente}">
+                    <i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-outline-danger me-1 btn-eliminar" 
+                    data-codigo="${cliente.codigo}"
+                    data-dni="${cliente.dniCliente}"
+                    data-nombre="${cliente.nombre} ${cliente.apellido}">
+                    <i class="bi bi-trash"></i></button>
+                    <button class="btn btn-sm btn-outline-success btn-alta" 
+                    data-codigo="${cliente.codigo}"
+                    data-dni="${cliente.dniCliente}">
+                    <i class="bi bi-plus-circle"></i></button>
                     </td>
                 </tr>
                 `;
@@ -77,9 +87,15 @@
                     <td>${cliente.dniCliente}</td>
                     <td>${estado}</td>
                     <td>
-                    <button class="btn btn-sm btn-outline-info me-1"><i class="bi bi-pencil"></i></button>
-                    <button class="btn btn-sm btn-outline-danger me-1"><i class="bi bi-trash"></i></button>
-                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i></button>
+                    <button class="btn btn-sm btn-outline-info me-1" 
+                    data-codigo="${cliente.codigo}" data-dni="${cliente.dniCliente}">
+                    <i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-outline-danger me-1" 
+                    data-codigo="${cliente.codigo}" data-dni="${cliente.dniCliente}" data-nombre="${cliente.nombre} ${cliente.apellido}">
+                    <i class="bi bi-trash"></i></button>
+                    <button class="btn btn-sm btn-outline-secondary" 
+                    data-codigo="${cliente.codigo}" data-dni="${cliente.dniCliente}">
+                    <i class="bi bi-eye"></i></button>
                     </td>
                 </tr>
             `;
@@ -136,6 +152,138 @@ function setupClientesListeners() {
         });
         botonAgregar.dataset.listenerAgregado = 'true';
     }
+    const tabla = document.getElementById('tabla-clientes-body');
+    if(tabla && !tabla.dataset.listenerAgregado){
+        tabla.addEventListener('click', (e) => {
+        const botonEliminar = e.target.closest('.btn-eliminar');
+        if(botonEliminar){
+            const codigo = botonEliminar.dataset.codigo;
+            const dni = botonEliminar.dataset.dni;
+            const nombre = botonEliminar.dataset.nombre;
+            eliminarCliente(codigo,dni, nombre);
+
+        }
+        const botonAlta = e.target.closest('.btn-alta');
+        if(botonAlta){
+            const codigo = botonAlta.dataset.codigo;
+            const dni = botonAlta.dataset.dni;
+            const nombre = botonAlta.dataset.nombre;
+            darClienteDeAlta(codigo,dni, nombre);
+        }
+        });
+        tabla.dataset.listenerAgregado = 'true';
+    }
+}
+
+/*
+*@param {string} dni
+*@param {string} nombre
+*/ 
+async function eliminarCliente(codigo, dni, nombre) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: `¿Querés dar de baja a ${nombre} (DNI: ${dni})? Esta acción cambiará su estado a Inactivo.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, dar de baja',
+        cancelButtonText: 'Cancelar',
+        background: '#1e1d2c', 
+        color: '#ffffff',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6'
+    }).then(async (result) => {
+        
+        if (result.isConfirmed) {
+            try {
+                const url = `https://localhost:7169/api/Clients/${codigo}`;
+                
+                const response = await fetch(url, {
+                    method: 'DELETE', // O 'PATCH' o 'DELETE', según tu API
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: No se pudo dar de baja al cliente.`);
+                }
+
+                // 3. Si todo salió bien, muestra éxito y recarga la tabla
+                Swal.fire({
+                    title: '¡Baja Exitosa!',
+                    text: `${nombre} ha sido marcado como Inactivo.`,
+                    icon: 'success',
+                    background: '#1e1d2c',
+                    color: '#ffffff',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+                cargarClientes(); // ¡Recarga la tabla para ver el cambio!
+
+            } catch (error) {
+                console.error('Error en la baja lógica:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'No se pudo completar la operación. ' + error.message,
+                    icon: 'error',
+                    background: '#1e1d2c',
+                    color: '#ffffff'
+                });
+            }
+        }
+    });
+}
+
+async function darClienteDeAlta(codigo, dni, nombre) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: `¿Querés dar de alta a ${nombre} (DNI: ${dni})? Esta acción cambiará su estado a Activo.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, dar de alta',
+        cancelButtonText: 'Cancelar',
+        background: '#1e1d2c', 
+        color: '#ffffff',
+        confirmButtonColor: 'rgba(0, 255, 76, 1)',
+        cancelButtonColor: '#3085d6'
+    }).then(async (result) => {
+        
+        if (result.isConfirmed) {
+            try {
+                const url = `https://localhost:7169/api/Clients/${codigo}`;
+                const response = await fetch(url, {
+                    method: 'PUT', // O 'PATCH' o 'DELETE', según tu API
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: No se pudo dar de alta al cliente.`);
+                }
+                Swal.fire({
+                    title: '¡Alta Exitosa!',
+                    text: `${nombre} ha sido marcado como Activo.`,
+                    icon: 'success',
+                    background: '#1e1d2c',
+                    color: '#ffffff',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+                cargarClientes(); // ¡Recarga la tabla para ver el cambio!
+            } catch (error) {
+                console.error('Error en la alta lógica:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'No se pudo completar la operación. ' + error.message,
+                    icon: 'error',
+                    background: '#1e1d2c',
+                    color: '#ffffff'
+                });
+            }
+        }
+    });
 }
 
 
@@ -150,23 +298,73 @@ function setupFormClienteListeners() {
         
         formAgregarCliente.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            const regexSoloNumeros = /^[0-9]+$/;
+            const regexSoloLetras = /^[a-zA-ZÀ-ÿ\s']+$/;
 
-            const nuevoCliente = {
-                nombre: document.getElementById('cliente-nombre').value,
-                apellido: document.getElementById('cliente-apellido').value,
-                dniCliente: document.getElementById('cliente-dni').value,
-                activo: document.getElementById('cliente-activo').value === 'true',
-                idBarrio: parseInt(document.getElementById('cliente-barrio').value),
-                idTipoCliente: parseInt(document.getElementById('cliente-tipo').value),
-                contacto : {
-                    descripcion : document.getElementById('cliente-contacto').value,
-                    idTipoContacto : parseInt(document.getElementById('cliente-tipo-contacto').value)
-                }
-            };
-            if(!nuevoCliente.nombre || !nuevoCliente.apellido || !nuevoCliente.dniCliente || isNaN(nuevoCliente.idBarrio) || isNaN(nuevoCliente.idTipoCliente) || !nuevoCliente.contacto.descripcion || isNaN(nuevoCliente.contacto.idTipoContacto)){
-                alert('Por favor, complete todos los campos obligatorios.');
+            //Valores crudos de los inputs
+            const dniInput = document.getElementById('cliente-dni').value;
+            const nombreInput = document.getElementById('cliente-nombre').value;
+            const apellidoInput = document.getElementById('cliente-apellido').value;
+            const contactoDesc = document.getElementById('cliente-contacto').value;
+            const idBarrioVal = parseInt(document.getElementById('cliente-barrio').value);
+            const idTipoClienteVal = parseInt(document.getElementById('cliente-tipo').value);
+            const idTipoContactoVal = parseInt(document.getElementById('cliente-tipo-contacto').value);
+            //Validaciones
+            if(!regexSoloLetras.test(nombreInput)){
+                Swal.fire({
+                    icon: "warning",
+                    title: "Nombre inválido",
+                    text: "El nombre debe contener solo letras y espacios.",
+                });
                 return;
             }
+
+            if(!regexSoloLetras.test(apellidoInput)){
+                Swal.fire({
+                    icon: "warning",
+                    title: "Apellido inválido",
+                    text: "El apellido debe contener solo letras y espacios.",
+                });
+                return;
+            }
+
+            if(!regexSoloNumeros.test(dniInput)){
+                Swal.fire({
+                    icon: "warning",
+                    title: "DNI inválido",
+                    text: "El DNI debe contener solo números.",
+                });
+                return;
+            }
+            
+
+            if (isNaN(idBarrioVal) || isNaN(idTipoClienteVal) || !contactoDesc || isNaN(idTipoContactoVal)) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campos incompletos',
+                    text: 'Por favor, complete todos los campos obligatorios (barrio, tipo, contacto, etc.).',
+                    background: '#1e1d2c', color: '#ffffff'
+                });
+                return;
+            }
+            
+            
+
+            
+            const nuevoCliente = {
+                nombre: nombreInput,
+                apellido: apellidoInput,
+                dniCliente: dniInput,
+                activo: document.getElementById('cliente-activo').value === 'true',
+                idBarrio: idBarrioVal,
+                idTipoCliente: idTipoClienteVal,
+                contacto : {
+                    descripcion : contactoDesc,
+                    idTipoContacto : idTipoContactoVal
+                }
+            };
+            
             console.log("Enviando cliente:", nuevoCliente);
             try{
                 const url = 'https://localhost:7169/api/Clients';
@@ -180,12 +378,20 @@ function setupFormClienteListeners() {
                 }
                 const clienteCreado = await response.json();
                 console.log('Cliente creado:', clienteCreado);
-                alert('¡Cliente agregado con éxito!');
+                Swal.fire({
+                    title: "Éxito",
+                    text: "Cliente agregado con éxito.",
+                    icon: "success"
+                });
                 navigateTo('clientes');
 
             }catch(error){
                 console.error('Error al agregar cliente:', error);
-                alert('Error al agregar el cliente. Por favor, intente nuevamente.');
+                Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Error al agregar el cliente: " + error.message,
+                });
             }
     });
         formAgregarCliente.dataset.listenerAgregado = 'true';

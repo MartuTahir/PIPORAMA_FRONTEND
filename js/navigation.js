@@ -77,7 +77,7 @@ const sections = {
     `,
     formCliente: `<main class="main-content p-4">
 
-    <h1 class="mb-4">Agregar Nuevo Cliente</h1>
+    <h1 class="mb-4 fw-bold">Agregar Nuevo Cliente</h1>
     <p class="lead">Completá todos los campos para registrar un nuevo cliente.</p>
     <hr>
 
@@ -94,7 +94,7 @@ const sections = {
                     <input type="text" class="form-control" id="cliente-dni" placeholder="Ej: 46554887">
                 </div>
                 <div class="mb-3">
-                    <label for="cliente-barrio" class="form-label">Barrio (ID)</label>
+                    <label for="cliente-barrio" class="form-label">Barrio</label>
                     <select class="form-select" id="cliente-barrio">
                         <option value="">Cargando barrios...</option>
                     </select>
@@ -107,7 +107,7 @@ const sections = {
                     <input type="text" class="form-control" id="cliente-apellido" placeholder="Ej: Guemberena">
                 </div>
                 <div class="mb-3">
-                    <label for="cliente-tipo" class="form-label">Tipo de Cliente (ID)</label>
+                    <label for="cliente-tipo" class="form-label">Tipo de Cliente</label>
                     <select class ="form-select" id="cliente-tipo">
                         <option value="">Cargando tipos...</option>
                     </select>
@@ -129,7 +129,7 @@ const sections = {
             <div class="col-md-6">
                 <div class="mb-3">
                     <label for="cliente-contacto" class="form-label">Contacto (Email o Teléfono)</label>
-                    <input type="text" class="form-control" id="cliente-contacto" placeholder="Ej: Juansito@gmail.com">
+                    <input type="text" class="form-control" id="cliente-contacto" placeholder="Ej: ejemplo@gmail.com">
                 </div>
             </div>
             <div class="col-md-6">

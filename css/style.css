@@ -513,7 +513,7 @@ body.light-mode .btn-theme::before {
     outline: none !important;
 }
 
-/*----------------------------------------------------- SECCION CLIENTES */
+/* ----------------------------------Seccion Clientes--------------------------------- */
 /* Contenedor */
 .main-clientes {
     margin: 0 auto;
@@ -537,6 +537,18 @@ h2 {
     border-color: var(--color-surface);
     color: var(--color-text);
 }
+
+.form-select {
+    background-color: var(--color-surface);
+    border-color: var(--color-surface);
+    color: var(--color-text);
+}
+.form-select option {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+}
+
+
 
 .form-control::placeholder {
     color: var(--color-muted);
