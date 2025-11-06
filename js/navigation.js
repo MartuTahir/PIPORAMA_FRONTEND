@@ -77,11 +77,14 @@ const sections = {
     `,
     formCliente: `<main class="main-content p-4">
 
-    <h1 class="mb-4 fw-bold">Agregar Nuevo Cliente</h1>
+    <h1 class="mb-4 fw-bold" id="form-cliente-titulo">Agregar Nuevo Cliente</h1>
     <p class="lead">Completá todos los campos para registrar un nuevo cliente.</p>
     <hr>
 
     <form id="form-agregar-cliente" class="col-lg-8">
+
+        <input type="hidden" id="cliente-codigo">
+        <input type="hidden" id="cliente-id-contacto">
 
         <div class="row">
             <div class="col-md-6">
@@ -134,7 +137,7 @@ const sections = {
             </div>
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="cliente-tipo-contacto" class="form-label">Tipo de Contacto (ID)</label>
+                    <label for="cliente-tipo-contacto" class="form-label">Tipo de Contacto</label>
                     <select class="form-select" id="cliente-tipo-contacto">
                         <option value="">Cargando tipos de contacto...</option>
                     </select>
@@ -142,7 +145,7 @@ const sections = {
             </div>
         </div>
 
-        <button type="submit" class="btn btn-success btn-lg mt-3">
+        <button type="submit" class="btn btn-success btn-lg mt-3" id="btn-submit">
             <i class="bi bi-check-circle-fill me-2"></i>
             Agregar Cliente
         </button>
@@ -168,6 +171,8 @@ function navigateTo(page) {
             </main>
         `;
     }
+
+    // Configurar listeners para la página de clientes
     if (page === 'clientes') {
         cargarClientes();
         setupClientesListeners();
