@@ -16,6 +16,59 @@ function checkAuth() {
     return true;
 }
 
+// ====== CONTROL DE ROLES Y PERMISOS ======
+function setupRoleBasedNavigation() {
+    const userRole = localStorage.getItem("userRole");
+    
+    // Definir permisos por rol
+    const rolePermissions = {
+        'Empleado': {
+            canSeeClientes: true,
+            canSeeFacturas: true,
+            canSeeDashboard: false,
+            canSeeEmpleados: false
+        },
+        'Administrador': {
+            canSeeClientes: true,
+            canSeeFacturas: true,
+            canSeeDashboard: true,
+            canSeeEmpleados: true
+        }
+    };
+    
+    const permissions = rolePermissions[userRole];
+    
+    if (!permissions) {
+        console.error('Rol no reconocido:', userRole);
+        return;
+    }
+    
+    // Controlar visibilidad del Dashboard
+    const dashboardNav = document.getElementById('dashboard-nav');
+    if (dashboardNav) {
+        dashboardNav.style.display = permissions.canSeeDashboard ? 'block' : 'none';
+    }
+    
+    // Controlar visibilidad de Empleados en el dropdown
+    const empleadosNav = document.getElementById('empleados-nav');
+    if (empleadosNav) {
+        empleadosNav.style.display = permissions.canSeeEmpleados ? 'block' : 'none';
+    }
+    
+    // Actualizar el texto del usuario para mostrar el rol
+    const usernameSpan = document.querySelector('.username');
+    if (usernameSpan) {
+        usernameSpan.textContent = userRole;
+    }
+    
+    // También actualizar el nombre completo en el dropdown
+    const userElement = document.getElementById('nombre-user');
+    const userName = localStorage.getItem("userName");
+    if (userElement) {
+        userElement.textContent = `${userName} (${userRole})`;
+    }
+}
+
 // ====== SISTEMA DE TEMAS ======
 function initTheme() {
     const body = document.body;
@@ -39,6 +92,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (checkAuth()) {
         // Solo inicializar tema si está autenticado
         initTheme();
+        // Configurar navegación basada en roles
+        setupRoleBasedNavigation();
     }
 });
 
@@ -55,24 +110,6 @@ if (themeToggle) {
             localStorage.setItem("theme", "light");
         } else {
             localStorage.setItem("theme", "dark");
-        }
-    });
-}
-
-// ====== FUNCIONALIDAD DE LOGOUT ======
-const logoutButton = document.querySelector(".cerrar");
-if (logoutButton) {
-    logoutButton.addEventListener("click", (e) => {
-        e.preventDefault();
-        
-        // Confirmar logout
-        if (confirm("¿Estás seguro de que quieres cerrar sesión?")) {
-            // Limpiar datos de sesión
-            localStorage.removeItem("authToken");
-            localStorage.removeItem("userName");
-            
-            // Redirigir al login
-            window.location.href = "index.html";
         }
     });
 }
