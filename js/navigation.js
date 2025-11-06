@@ -4,11 +4,11 @@ const sections = {
             <h1 class="neon-title">Bienvenido a <span>CineControl</span></h1>
             <p class="lead">Gestioná tu cine con estilo, precisión y luz propia 💡</p>
 
-            <div class="d-flex gap-3 mt-4 flex-wrap justify-content-center">
-                <a href="#" class="btn btn-home-primary">Dashboard</a>
-                <a href="#" class="btn btn-home-primary">Clientes</a>
-                <a href="#" class="btn btn-home-primary">Facturación</a>
-                <a href="#" class="btn btn-home-primary">Empleados</a>
+            <div class="d-flex gap-3 mt-4 flex-wrap justify-content-center" id="home-buttons-container">
+                <a href="#dashboard" class="btn btn-home-primary" id="home-dashboard-btn">Dashboard</a>
+                <a href="#clientes" class="btn btn-home-primary">Clientes</a>
+                <a href="#facturas" class="btn btn-home-primary">Facturación</a>
+                <a href="#empleados" class="btn btn-home-primary" id="home-empleados-btn">Empleados</a>
             </div>
         </main>
     `,
@@ -155,6 +155,34 @@ const sections = {
 // Función para navegar entre páginas
 function navigateTo(page) {
     const contentDiv = document.getElementById('main-content');
+    const userRole = localStorage.getItem("userRole");
+    
+    // Verificar permisos de acceso según el rol
+    const rolePermissions = {
+        'Empleado': {
+            allowedPages: ['inicio', 'clientes', 'facturas', 'formCliente']
+        },
+        'Administrador': {
+            allowedPages: ['inicio', 'clientes', 'facturas', 'dashboard', 'empleados', 'formCliente']
+        }
+    };
+    
+    const permissions = rolePermissions[userRole];
+    
+    // Si el usuario no tiene permisos para acceder a esta página, redirigir al inicio
+    if (permissions && !permissions.allowedPages.includes(page)) {
+        contentDiv.innerHTML = `
+            <main class="container-fluid py-4 px-4 text-center">
+                <div class="alert alert-warning">
+                    <h1 class="text-dark">Acceso Denegado</h1>
+                    <p class="text-muted">No tienes permisos para acceder a esta sección.</p>
+                    <p class="text-muted">Tu rol actual es: <strong>${userRole}</strong></p>
+                    <a href="#inicio" class="btn btn-primary nav-linkD">Volver al inicio</a>
+                </div>
+            </main>
+        `;
+        return;
+    }
     
     // Actualizar contenido usando el objeto sections
     if (sections[page]) {
@@ -173,6 +201,9 @@ function navigateTo(page) {
         setupClientesListeners();
     }else if (page === 'formCliente') {
         setupFormClienteListeners();
+    }else if (page === 'inicio') {
+        // Configurar visibilidad de botones en el home según el rol
+        setTimeout(setupHomeButtonsVisibility, 100); // Pequeño delay para asegurar que el DOM esté actualizado
     }
     
 
@@ -247,5 +278,40 @@ document.addEventListener('DOMContentLoaded', function() {
     navigateTo(currentHash || 'inicio');
 });
 
+// Función para controlar los botones del home según el rol
+function setupHomeButtonsVisibility() {
+    const userRole = localStorage.getItem("userRole");
+    
+    // Definir permisos por rol (igual que en home.js)
+    const rolePermissions = {
+        'Empleado': {
+            canSeeDashboard: false,
+            canSeeEmpleados: false
+        },
+        'Administrador': {
+            canSeeDashboard: true,
+            canSeeEmpleados: true
+        }
+    };
+    
+    const permissions = rolePermissions[userRole];
+    
+    if (!permissions) {
+        return; // Si no hay rol definido, mostrar todo por defecto
+    }
+    
+    // Controlar visibilidad de los botones del home
+    const dashboardBtn = document.getElementById('home-dashboard-btn');
+    if (dashboardBtn) {
+        dashboardBtn.style.display = permissions.canSeeDashboard ? 'inline-block' : 'none';
+    }
+    
+    const empleadosBtn = document.getElementById('home-empleados-btn');
+    if (empleadosBtn) {
+        empleadosBtn.style.display = permissions.canSeeEmpleados ? 'inline-block' : 'none';
+    }
+}
+
 // Hacer las funciones disponibles globalmente
 window.navigateTo = navigateTo;
+window.setupHomeButtonsVisibility = setupHomeButtonsVisibility;

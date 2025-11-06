@@ -34,15 +34,15 @@
 
             <li><a href="#inicio" class="nav-link active nav-linkD">Inicio</a></li>
 
-            <li><a href="#dashboard" class="nav-link nav-linkD">Dashboard</a></li>
+            <li id="dashboard-nav"><a href="#dashboard" class="nav-link nav-linkD">Dashboard</a></li>
 
             <!-- Dropdown de Consultas -->
-            <li class="nav-item dropdown dropdown-hover">
+            <li class="nav-item dropdown dropdown-hover" id="consultas-dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="consultasDropdown" role="button">
                 Consultas
               </a>
               <ul class="dropdown-menu" aria-labelledby="consultasDropdown">
-                <li><a class="dropdown-item nav-linkD" href="#empleados">Empleados</a></li>
+                <li id="empleados-nav"><a class="dropdown-item nav-linkD" href="#empleados">Empleados</a></li>
                 <li><a class="dropdown-item nav-linkD" href="#clientes">Clientes</a></li>
                 <li><a class="dropdown-item nav-linkD" href="#facturas">Facturas</a></li>
               </ul>
@@ -56,7 +56,7 @@
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                 <li class="dropdown-item-text" id="nombre-user"></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item cerrar text-danger" href="#">Cerrar sesión</a></li>
+                <li><a class="dropdown-item cerrar text-danger" href="#" id="cerrar-sesion">Cerrar sesión</a></li>
               </ul>
             </li>
 
@@ -85,5 +85,6 @@
 <script src="js/home.js"></script>
 <script src="js/clientes.js"></script>
 <script src="js/navigation.js"></script>
+<script src="js/login.js"></script>
 </body>
 </html>
