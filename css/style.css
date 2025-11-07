@@ -611,6 +611,25 @@ h2 {
     color: var(--color-text);
 }
 
+/* -----------------------------FACTURAS------------------------- */
+.body-detail {
+    background-color: var(--color-surface);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    padding: 1.5rem;
+    color: var(--color-text);
+}
+/* Fila del total personalizada con color secondary del proyecto */
+.total-row-custom {
+    background-color: var(--primary) !important;
+    color: var(--color-bg) !important;
+}
+
+.total-row-custom td {
+    background-color: var(--primary) !important;
+    color: var(--color-bg) !important;
+    border-color: var(--primary) !important;
+}
+
 
 /*----------------------------RESPONSIVE---------------------------*/
 @media (max-width: 991px) {
@@ -873,3 +892,4 @@ h2 {
         font-size: 1.8rem;
     }
 }
+

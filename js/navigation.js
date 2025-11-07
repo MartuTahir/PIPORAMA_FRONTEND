@@ -152,6 +152,161 @@ const sections = {
 
     </form>
 </main>
+`,
+facturas : `
+<main class="container-fluid py-4 px-4 main-clientes">
+            <h2 class="mb-4 fw-bold">Administración de Facturas</h2>
+
+            <div class="row mb-4">
+            <div class="col-lg-6">
+                <div class="d-flex">
+                <div class="input-group me-2">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control"  placeholder="Buscar por nro de factura..." id="buscar-factura">
+                </div>
+                <button class="btn btn-primary d-flex align-items-center" type="button" id="boton-buscar-f">
+                    <i class="bi bi-search me-2"></i>Buscar
+                </button>
+                </div>
+            </div>
+            <div class="col-lg-6 text-lg-end mt-3 mt-lg-0">
+                <a href="#formFactura" class="btn btn-primary" id="boton-agregar-factura">
+                <i class="bi bi-person-plus-fill me-2"></i>
+                Agregar Factura
+                </a>
+            </div>
+            </div>
+
+            <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle">
+                <thead>
+                <tr>
+                    <th scope="col">ID Factura</th>
+                    <th scope="col">DNI cliente</th>
+                    <th scope="col">DNI empleado</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Método de pago</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Forma de compra</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+                </thead>
+                <tbody id="tabla-facturas-body">
+                <tr><td colspan="8" class="text-center">Cargando...</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-4">
+            <div class="text-result" id="total-facturas">
+                Mostrando 0 de 0 resultados
+            </div>
+            <nav aria-label="Paginación de facturas">
+                <ul class="pagination pagination-dark mb-0">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">10</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Siguiente</a>
+                </li>
+                </ul>
+            </nav>
+            </div>
+        </main> 
+`,
+formFactura : ` <main class="main-content p-4">
+
+    <h1 class="mb-4 fw-bold" id="form-factura-titulo">Agregar Nueva Factura</h1>
+    <p class="lead">Completá todos los campos para registrar una nueva factura.</p>
+    <hr>
+
+    <form id="form-agregar-factura" class="col-lg-8">
+
+        <input type="hidden" id="factura-id">
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="factura-dni-cliente" class="form-label">DNI del Cliente</label>
+                    <input type="text" class="form-control" id="factura-dni-cliente" placeholder="Ej: 46554887">
+                </div>
+                <div class="mb-3">
+                    <label for="factura-dni-empleado" class="form-label">DNI del Empleado</label>
+                    <input type="text" class="form-control" id="factura-dni-empleado" placeholder="Ej: 12345678">
+                </div>
+                <div class="mb-3">
+                    <label for="factura-fecha" class="form-label">Fecha</label>
+                    <input type="date" class="form-control" id="factura-fecha">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="factura-metodo-pago" class="form-label">Método de Pago</label>
+                    <select class="form-select" id="factura-metodo-pago">
+                        <option value="">Seleccione método de pago</option>
+                        <option value="efectivo">Efectivo</option>
+                        <option value="tarjeta_credito">Tarjeta de Crédito</option>
+                        <option value="tarjeta_debito">Tarjeta de Débito</option>
+                        <option value="transferencia">Transferencia</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="factura-estado" class="form-label">Estado</label>
+                    <select class="form-select" id="factura-estado">
+                        <option value="pendiente" selected>Pendiente</option>
+                        <option value="pagada">Pagada</option>
+                        <option value="cancelada">Cancelada</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="factura-forma-compra" class="form-label">Forma de Compra</label>
+                    <select class="form-select" id="factura-forma-compra">
+                        <option value="">Seleccione forma de compra</option>
+                        <option value="presencial">Presencial</option>
+                        <option value="online">Online</option>
+                        <option value="telefonica">Telefónica</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-4">
+        <h5 class="mb-3">Información Adicional</h5>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="factura-total" class="form-label">Total ($)</label>
+                    <input type="number" step="0.01" min="0" class="form-control" id="factura-total" placeholder="0.00">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="factura-observaciones" class="form-label">Observaciones</label>
+                    <textarea class="form-control" id="factura-observaciones" rows="3" placeholder="Observaciones adicionales (opcional)"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-success btn-m" id="btn-submit-factura">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                Agregar Factura
+            </button>
+            <a href="#facturas" class="btn btn-secondary btn-m" onclick="navigateTo('facturas'); return false;">
+                <i class="bi bi-arrow-left me-2"></i>
+                Volver a Facturas
+            </a>
+        </div>
+
+    </form>
+</main>
 `
 }
 
@@ -163,10 +318,10 @@ function navigateTo(page) {
     // Verificar permisos de acceso según el rol
     const rolePermissions = {
         'Empleado': {
-            allowedPages: ['inicio', 'clientes', 'facturas', 'formCliente']
+            allowedPages: ['inicio', 'clientes', 'facturas', 'formCliente', 'formFactura']
         },
         'Administrador': {
-            allowedPages: ['inicio', 'clientes', 'facturas', 'dashboard', 'empleados', 'formCliente']
+            allowedPages: ['inicio', 'clientes', 'facturas', 'dashboard', 'empleados', 'formCliente', 'formFactura']
         }
     };
     
@@ -200,12 +355,17 @@ function navigateTo(page) {
         `;
     }
 
-    // Configurar listeners para la página de clientes
+    // Configurar listeners para las diferentes páginas
     if (page === 'clientes') {
         cargarClientes();
         setupClientesListeners();
     }else if (page === 'formCliente') {
         setupFormClienteListeners();
+    }else if (page === 'facturas') {
+        cargarFacturas();
+        setupFacturasListeners();
+    }else if (page === 'formFactura') {
+        setupFormFacturaListeners();
     }else if (page === 'inicio') {
         // Configurar visibilidad de botones en el home según el rol
         setTimeout(setupHomeButtonsVisibility, 100); // Pequeño delay para asegurar que el DOM esté actualizado
