@@ -243,6 +243,14 @@ body.light-mode {
     color: var(--color-text);
 }
 
+body.light-mode .table-dark {
+    
+    --bs-table-hover-bg: #f0f0f0; /* Un gris muy claro */
+    
+    
+    --bs-table-hover-color: var(--color-text);
+}
+
 /* Transición suave entre temas */
 body {
     transition: background-color 0.4s ease, color 0.4s ease;
