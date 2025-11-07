@@ -243,6 +243,15 @@ body.light-mode {
     color: var(--color-text);
 }
 
+body.light-mode .table-dark {
+    /* 1. Define un color de hover que SÍ se vea en modo claro */
+    --bs-table-hover-bg: #f0f0f0; /* Un gris muy claro */
+    
+    /* 2. ¡LA CLAVE! Fuerza el color de texto en el hover
+       para que use tu variable de texto (que es negro) */
+    --bs-table-hover-color: var(--color-text);
+}
+
 /* Transición suave entre temas */
 body {
     transition: background-color 0.4s ease, color 0.4s ease;
