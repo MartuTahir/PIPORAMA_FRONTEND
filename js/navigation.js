@@ -150,9 +150,165 @@ const sections = {
             Agregar Cliente
         </button>
 
-    </form>
-</main>
-`,
+        </form>
+    </main>
+    `,
+    empleados : `
+        <main class="container-fluid py-4 px-4 main-empleados">
+            <h2 class="mb-4 fw-bold">Administración de Empleados</h2>
+
+            <div class="row mb-4">
+            <div class="col-lg-6">
+                <div class="d-flex">
+                <div class="input-group me-2">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control"  placeholder="Buscar por DNI..." id="buscar-empleados">
+                </div>
+                <button class="btn btn-primary d-flex align-items-center" type="button" id="boton-buscar"><i class="bi bi-search me-2"></i>Buscar</button>
+                </div>
+            </div>
+            <div class="col-lg-6 text-lg-end mt-3 mt-lg-0">
+                <a href="#formEmpleados" class="btn btn-primary" id="boton-agregar-empleados">
+                <i class="bi bi-person-plus-fill me-2"></i> Agregar Empleado</a>
+            </div>
+            </div>
+
+            <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle">
+                <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">DNI</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+                </thead>
+                <tbody id="tabla-empleados-body">
+                <tr><td colspan="5" class="text-center">Cargando...</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-4">
+            <div class="text-result" id="total-empleados">
+                Mostrando 0 de 0 resultados
+            </div>
+            <nav aria-label="Paginación de empleados">
+                <ul class="pagination pagination-dark mb-0">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">10</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Siguiente</a>
+                </li>
+                </ul>
+            </nav>
+            </div>
+        </main>
+    `,
+    formEmpleados: `
+    <main class="main-content p-4">
+
+        <h1 class="mb-4 fw-bold" id="form-empleado-titulo">Agregar Nuevo Empleado</h1>
+        <p class="lead">Completá todos los campos para registrar un nuevo empleado.</p>
+        <hr>
+
+        <form id="form-agregar-empleado" class="col-lg-8">
+
+            <input type="hidden" id="empleado-codigo">
+            <input type="hidden" id="empleado-id-contacto">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="empleado-nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="empleado-nombre" placeholder="Ej: Pablo">
+                    </div>
+                    <div class="mb-3">
+                        <label for="empleado-dni" class="form-label">DNI</label>
+                        <input type="text" class="form-control" id="empleado-dni" placeholder="Ej: 46310269">
+                    </div>
+                    <div class="mb-3">
+                        <label for="empleado-barrio" class="form-label">Barrio</label>
+                        <select class="form-select" id="empleado-barrio">
+                            <option value="">Cargando barrios...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="empleado-apellido" class="form-label">Apellido</label>
+                        <input type="text" class="form-control" id="empleado-apellido" placeholder="Ej: Primitz">
+                    </div>
+                    <div class="mb-3">
+                        <label for="empleado-activo" class="form-label">Estado</label>
+                        <select class="form-select" id="empleado-activo">
+                            <option value="true" selected>Activo</option>
+                            <option value="false">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="empleado-rol" class="form-label">Roles</label>
+                        <select class ="form-select" id="empleado-rol">
+                        <option value="">Cargando roles...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4">
+            <h5 class="mb-3">Datos del Sistema</h5>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="empleado-usuario" class="form-label">Usuario Sistema</label>
+                        <input type="text" class="form-control" id="empleado-usuario" placeholder="Ej: pabloprimitz">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="empleado-contraseña" class="form-label">Contraseña Sistema</label>
+                        <input type="text" class="form-control" id="empleado-contraseña" placeholder="Ej: $1a_Bcd2/&5">
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4">
+            <h5 class="mb-3">Datos de Contacto</h5>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="empleado-contacto" class="form-label">Contacto (Email o Teléfono)</label>
+                        <input type="text" class="form-control" id="empleado-contacto" placeholder="Ej: ejemplo@gmail.com">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="empleado-tipo-contacto" class="form-label">Tipo de Contacto</label>
+                        <select class="form-select" id="empleado-tipo-contacto">
+                            <option value="">Cargando tipos de contacto...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg mt-3" id="btn-submit">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                Agregar Empleado
+            </button>
+
+            </form>
+    </main>
+    `,
 facturas : `
 <main class="container-fluid py-4 px-4 main-clientes">
             <h2 class="mb-4 fw-bold">Administración de Facturas</h2>
@@ -321,7 +477,7 @@ function navigateTo(page) {
             allowedPages: ['inicio', 'clientes', 'facturas', 'formCliente', 'formFactura']
         },
         'Administrador': {
-            allowedPages: ['inicio', 'clientes', 'facturas', 'dashboard', 'empleados', 'formCliente', 'formFactura']
+            allowedPages: ['inicio', 'clientes', 'facturas', 'dashboard', 'empleados', 'formCliente', 'formFactura', 'formEmpleados']
         }
     };
     
@@ -371,6 +527,14 @@ function navigateTo(page) {
         setTimeout(setupHomeButtonsVisibility, 100); // Pequeño delay para asegurar que el DOM esté actualizado
     }
     
+    // Configurar listeners para la página de Empleados
+    if (page === 'empleados') {
+        cargarEmpleados();
+        setupEmpleadosListeners();
+    }
+    else if (page === 'formEmpleados') {
+        setupFormEmpleadoListeners();
+    }
 
     
     // Actualizar estado activo del navbar
