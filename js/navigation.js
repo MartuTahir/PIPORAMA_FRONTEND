@@ -219,95 +219,134 @@ facturas : `
             </div>
         </main> 
 `,
-formFactura : ` <main class="main-content p-4">
 
+// ... (tus otras secciones como 'inicio', 'clientes', etc.) ...
+
+formFactura: ` <main class="main-content p-4">
     <h1 class="mb-4 fw-bold" id="form-factura-titulo">Agregar Nueva Factura</h1>
     <p class="lead">Completá todos los campos para registrar una nueva factura.</p>
     <hr>
-
-    <form id="form-agregar-factura" class="col-lg-8">
-
-        <input type="hidden" id="factura-id">
-
+    <form id="form-agregar-factura" class="col-lg-10">
         <div class="row">
             <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="factura-dni-cliente" class="form-label">DNI del Cliente</label>
-                    <input type="text" class="form-control" id="factura-dni-cliente" placeholder="Ej: 46554887">
-                </div>
-                <div class="mb-3">
-                    <label for="factura-dni-empleado" class="form-label">DNI del Empleado</label>
-                    <input type="text" class="form-control" id="factura-dni-empleado" placeholder="Ej: 12345678">
-                </div>
-                <div class="mb-3">
-                    <label for="factura-fecha" class="form-label">Fecha</label>
-                    <input type="date" class="form-control" id="factura-fecha">
-                </div>
+                <div class="mb-3"><label for="factura-dni-cliente" class="form-label">DNI del Cliente</label><input type="text" class="form-control" id="factura-dni-cliente" placeholder="Ej: 46554887"></div>
+                <div class="mb-3"><label for="factura-dni-empleado" class="form-label">DNI del Empleado</label><input type="text" class="form-control" id="factura-dni-empleado" placeholder="Ej: 12345678"></div>
+                <div class="mb-3"><label for="factura-fecha" class="form-label">Fecha</label><input type="date" class="form-control" id="factura-fecha"></div>
             </div>
-
             <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="factura-metodo-pago" class="form-label">Método de Pago</label>
-                    <select class="form-select" id="factura-metodo-pago">
-                        <option value="">Seleccione método de pago</option>
-                        <option value="efectivo">Efectivo</option>
-                        <option value="tarjeta_credito">Tarjeta de Crédito</option>
-                        <option value="tarjeta_debito">Tarjeta de Débito</option>
-                        <option value="transferencia">Transferencia</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="factura-estado" class="form-label">Estado</label>
-                    <select class="form-select" id="factura-estado">
-                        <option value="pendiente" selected>Pendiente</option>
-                        <option value="pagada">Pagada</option>
-                        <option value="cancelada">Cancelada</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="factura-forma-compra" class="form-label">Forma de Compra</label>
-                    <select class="form-select" id="factura-forma-compra">
-                        <option value="">Seleccione forma de compra</option>
-                        <option value="presencial">Presencial</option>
-                        <option value="online">Online</option>
-                        <option value="telefonica">Telefónica</option>
-                    </select>
-                </div>
+                <div class="mb-3"><label for="factura-metodo-pago" class="form-label">Método de Pago</label><select class="form-select" id="factura-metodo-pago"><option value="">Cargando...</option></select></div>
+                <div class="mb-3"><label for="factura-estado" class="form-label">Estado</label><select class="form-select" id="factura-estado"><option value="">Cargando...</option></select></div>
+                <div class="mb-3"><label for="factura-forma-compra" class="form-label">Forma de Compra</label><select class="form-select" id="factura-forma-compra"><option value="">Cargando...</option></select></div>
             </div>
         </div>
 
         <hr class="my-4">
-        <h5 class="mb-3">Información Adicional</h5>
+        <h5 class="mb-3">Detalles de la Factura</h5>
+        <div class="p-3 mb-3" style="background-color: var(--color-surface); border-radius: var(--radius);">
+            
+            <div class="mb-3">
+                <label for="detalle-tipo-item" class="form-label fw-bold">1. Seleccione el tipo de ítem</label>
+                <select class="form-select" id="detalle-tipo-item">
+                    <option value="" selected>Seleccione un tipo...</option>
+                    <option value="ticket">Ticket (Entrada)</option>
+                    <option value="consumible">Consumible</option>
+                    <option value="combo">Combo</option>
+                </select>
+            </div>
 
+            <div id="formularios-detalle">
+                
+                <div id="form-seccion-ticket" class="detalle-seccion" style="display: none;">
+                    <h6 class="text-info">Datos del Ticket</h6>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="ticket-funcion" class="form-label">Función</label>
+                            <select class="form-select" id="ticket-funcion"><option value="">Cargando funciones...</option></select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="ticket-asiento" class="form-label">Asiento</label>
+                            <select class="form-select" id="ticket-asiento" disabled><option value="">Seleccione función...</option></select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="ticket-precio" class="form-label">Precio ($)</label>
+                            <input type="number" step="0.01" class="form-control" id="ticket-precio" readonly placeholder="0.00">
+                        </div>
+                    </div>
+                </div>
+                <div id="form-seccion-consumible" class="detalle-seccion" style="display: none;">
+                    <h6 class="text-info">Datos del Consumible</h6>
+                    <div class="row">
+                        <div class="col-md-8 mb-3"><label for="consumible-descripcion" class="form-label">Descripción</label><select class="form-select" id="consumible-descripcion"><option value="">Cargando...</option></select></div>
+                        <div class="col-md-4 mb-3"><label for="consumible-precio" class="form-label">Precio ($)</label><input type="number" step="0.01" class="form-control" id="consumible-precio" readonly placeholder="0.00"></div>
+                    </div>
+                </div>
+
+                <div id="form-seccion-combo" class="detalle-seccion" style="display: none;">
+                    <h6 class="text-info">Datos del Combo</h6>
+                    <div class="row">
+                        <div class="col-md-8 mb-3"><label for="combo-descripcion" class="form-label">Descripción</label><select class="form-select" id="combo-descripcion"><option value="">Cargando...</option></select></div>
+                        <div class="col-md-4 mb-3"><label for="combo-precio" class="form-label">Precio ($)</label><input type="number" step="0.01" class="form-control" id="combo-precio" readonly placeholder="0.00"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row align-items-end mt-3">
+                <div class="col-md-9">
+                    <label for="detalle-promocion" class="form-label">2. Aplicar Promoción (Opcional)</label>
+                    <select class="form-select" id="detalle-promocion"><option value="" selected>Sin promoción...</option></select>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-primary w-100" id="btn-agregar-item">
+                        <i class="bi bi-plus-circle me-2"></i>Agregar Ítem
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <h6 class="mb-2">Ítems a Facturar</h6>
+        <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
+        <table class="table table-dark table-sm">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Descripción</th>
+                        <th>Detalles</th>
+                        <th>Promoción</th>
+                        <th>Precio Final</th>
+                        <th class="text-center" style="width: 50px;">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-detalles-body">
+                    <tr><td colspan="6" class="text-center text-muted">Aún no hay ítems...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr class="my-4">
+        <h5 class="mb-3">Información Adicional</h5>
         <div class="row">
             <div class="col-md-6">
                 <div class="mb-3">
                     <label for="factura-total" class="form-label">Total ($)</label>
-                    <input type="number" step="0.01" min="0" class="form-control" id="factura-total" placeholder="0.00">
+                                        <input type="number" class="form-control" id="factura-total" readonly placeholder="0.00">
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="factura-observaciones" class="form-label">Observaciones</label>
-                    <textarea class="form-control" id="factura-observaciones" rows="3" placeholder="Observaciones adicionales (opcional)"></textarea>
-                </div>
-            </div>
+            
         </div>
 
         <div class="d-flex gap-2 mt-4">
             <button type="submit" class="btn btn-success btn-m" id="btn-submit-factura">
                 <i class="bi bi-check-circle-fill me-2"></i>
-                Agregar Factura
+                Guardar Factura
             </button>
             <a href="#facturas" class="btn btn-secondary btn-m" onclick="navigateTo('facturas'); return false;">
-                <i class="bi bi-arrow-left me-2"></i>
+              <i class="bi bi-arrow-left me-2"></i>
                 Volver a Facturas
             </a>
         </div>
-
-    </form>
+        </form>
 </main>
-`
+`,
 }
 
 // Función para navegar entre páginas
