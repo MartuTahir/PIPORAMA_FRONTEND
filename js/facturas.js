@@ -1,5 +1,12 @@
+// Array que almacena los items que se van agregando a la factura (tickets, consumibles, combos)
 let carritoDetalles = []
-// Función para configurar los listeners del formulario de facturas
+// Configura todos los event listeners y carga inicial del formulario de facturas
+// Esta función se ejecuta cuando se carga la página de facturas por primera vez
+// Se encarga de:
+// - Inicializar el carrito de detalles
+// - Configurar la fecha actual por defecto
+// - Cargar todos los combos (select) con datos de la API
+// - Configurar los event listeners para el formulario y sus campos
 async function setupFormFacturaListeners() {
     const formFactura = document.getElementById('form-agregar-factura');
     const fechaInput = document.getElementById('factura-fecha');
@@ -17,7 +24,7 @@ async function setupFormFacturaListeners() {
     if (formFactura && !formFactura.dataset.listenerAgregado) {
         
         console.log("Configurando formulario de facturas...");
-        const urlBase = 'https://localhost:7169/api/Additionals/'; 
+        const urlBase = 'https://localhost:7169/api/Additionals/';
         
         // --- Carga de Combos (Encabezado y Detalles) ---
         cargarCombos(`${urlBase}medios-pago`, 'factura-metodo-pago', 'medioPago', 'medioPago', 'Seleccione Método...');
@@ -28,7 +35,7 @@ async function setupFormFacturaListeners() {
         cargarCombosPrecios(`${urlBase}combos`, 'combo-descripcion', 'nomCombo', 'nomCombo', 'precioCombo', 'Seleccione Combo...'); // (Asumiendo 'preCombo')
         
         try {
-            const response = await fetch(`${urlBase}funciones`);
+            const response = await fetch(`${urlBase}funciones`);//Agarra todas las funciones
             if (!response.ok) throw new Error('No se pudieron cargar las funciones');
             
             todasLasFunciones = await response.json(); // Guarda la lista global
@@ -41,8 +48,9 @@ async function setupFormFacturaListeners() {
         }
 
         // --- "Engancha" todos los listeners ---
-        formFactura.addEventListener('submit', async function(e) { e.preventDefault(); await guardarFactura(); });
+        formFactura.addEventListener('submit', async function(e) { e.preventDefault(); await guardarFactura(); });//Listener para guardar la factura
         
+        //Listener para mostrar/ocultar secciones según el tipo de item seleccionado de manera dinámica
         document.getElementById('detalle-tipo-item')?.addEventListener('change', () => {
                 document.querySelectorAll('.detalle-seccion').forEach(seccion => { seccion.style.display = 'none'; });
                 const seccionVisible = document.getElementById(`form-seccion-${document.getElementById('detalle-tipo-item').value}`);
@@ -61,9 +69,14 @@ async function setupFormFacturaListeners() {
     }
 }
 
-
+//Funcion para agregar un item al carrito de detalles
+// Agrega un nuevo item al carrito de la factura
+// Maneja la lógica para agregar tickets, consumibles o combos
+// Valida los datos ingresados y aplica promociones si corresponde
+// Actualiza la vista del carrito después de agregar el item
 function agregarItemAlCarrito() {
-    const tipoItem = document.getElementById('detalle-tipo-item').value;//Tipo de item seleccionado
+    // Obtener el tipo de item seleccionado (ticket/consumible/combo)
+    const tipoItem = document.getElementById('detalle-tipo-item').value;
     const promoSelect = document.getElementById('detalle-promocion');//Promoción seleccionada
     const promoOpcion = promoSelect.options[promoSelect.selectedIndex];//Opción seleccionada de promoción
 
@@ -79,24 +92,25 @@ function agregarItemAlCarrito() {
     };
     let precioOriginal = 0;
 
+
     if (tipoItem === 'consumible') {
-        const select = document.getElementById('consumible-descripcion');
-        const descripcion = select.value;
-        precioOriginal = parseFloat(document.getElementById('consumible-precio').value);
+        const select = document.getElementById('consumible-descripcion');//Consumible seleccionado
+        const descripcion = select.value;//Descripción del consumible seleccionado
+        precioOriginal = parseFloat(document.getElementById('consumible-precio').value);//Precio del consumible
         if (!descripcion || isNaN(precioOriginal) || precioOriginal <= 0) {
             Swal.fire({icon: 'warning', title: 'Datos incompletos', text: 'Seleccione un consumible y verifique su precio.', background: '#1e1d2c', color: '#ffffff'});
             return;
         }
-        nuevoItem.Consumable = descripcion;
+        nuevoItem.Consumable = descripcion;//Asigna el consumible al nuevo item
         nuevoItem._descripcionDisplay = descripcion;
 
     } else if (tipoItem === 'ticket') {
         precioOriginal = parseFloat(document.getElementById('ticket-precio').value);
         
-        const selectFuncion = document.getElementById('ticket-funcion');
-        const funcionSeleccionada = selectFuncion.options[selectFuncion.selectedIndex];
-        const selectAsiento = document.getElementById('ticket-asiento');
-        const asientoSeleccionado = selectAsiento.options[selectAsiento.selectedIndex];
+        const selectFuncion = document.getElementById('ticket-funcion');//Función seleccionada
+        const funcionSeleccionada = selectFuncion.options[selectFuncion.selectedIndex];//Opción seleccionada de la lista de funciones
+        const selectAsiento = document.getElementById('ticket-asiento');//Asiento seleccionado
+        const asientoSeleccionado = selectAsiento.options[selectAsiento.selectedIndex];//Opción seleccionada de la lista de asientos
 
         // Validación
         if (isNaN(precioOriginal) || precioOriginal <= 0 || !funcionSeleccionada.value || !asientoSeleccionado.value) {
@@ -117,10 +131,10 @@ function agregarItemAlCarrito() {
                 seatNumber: parseInt(asientoSeleccionado.dataset.numero)
             }
         };
-        nuevoItem._descripcionDisplay = `Entrada: ${funcionSeleccionada.dataset.film}`;
-        nuevoItem._detallesDisplay = `Sala: ${funcionSeleccionada.dataset.room}, Fila: ${asientoSeleccionado.dataset.fila}, Asiento: ${asientoSeleccionado.dataset.numero}`;
+        nuevoItem._descripcionDisplay = `Entrada: ${funcionSeleccionada.dataset.film}`;//Descripción del ticket
+        nuevoItem._detallesDisplay = `Sala: ${funcionSeleccionada.dataset.room}, Fila: ${asientoSeleccionado.dataset.fila}, Asiento: ${asientoSeleccionado.dataset.numero}`;//Detalles del ticket
 
-    } else if (tipoItem === 'combo') {
+    } else if (tipoItem === 'combo') {//Logica similar a los consumibles
 
         const select = document.getElementById('combo-descripcion');
         const descripcion = select.value;
@@ -137,7 +151,7 @@ function agregarItemAlCarrito() {
         return;
     }
 
-    if (promoOpcion && promoOpcion.value) {
+    if (promoOpcion && promoOpcion.value) {//Logica para aplicar descuento si hay promoción seleccionada
         const descuento = parseFloat(promoOpcion.dataset.descuento) || 0;
         const precioFinal = precioOriginal * (1 - (descuento / 100));
         nuevoItem.Price = precioFinal;
@@ -149,9 +163,10 @@ function agregarItemAlCarrito() {
         nuevoItem.Price = precioOriginal;
     }
 
-    carritoDetalles.push(nuevoItem);
-    renderizarCarrito();
+    carritoDetalles.push(nuevoItem);//Agrega el nuevo item al carrito
+    renderizarCarrito();//Actualiza la vista del carrito
     
+    //Esto lo que hace es resetear el formulario de detalles después de agregar un item
     document.getElementById('detalle-tipo-item').value = "";
     document.querySelectorAll('.detalle-seccion').forEach(s => {
         s.style.display = 'none';
@@ -161,12 +176,17 @@ function agregarItemAlCarrito() {
 }
 
 
+// Actualiza la vista del carrito en la tabla de detalles
+// Muestra cada item con su tipo, descripción, promoción y precio
+// Calcula y actualiza el total de la factura
+// Si el carrito está vacío, muestra un mensaje indicándolo
 function renderizarCarrito() {
     const tablaBody = document.getElementById('tabla-detalles-body');
     const inputTotal = document.getElementById('factura-total');
     
     tablaBody.innerHTML = '';
     
+    // Si no hay items, no te deja agregar nada
     if (carritoDetalles.length === 0) {
         tablaBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Aún no hay ítems...</td></tr>';
         inputTotal.value = "0.00";
@@ -175,6 +195,7 @@ function renderizarCarrito() {
 
     let totalCalculado = 0;
 
+    // Recorre cada item y lo agrega a la tabla    
     carritoDetalles.forEach((item, index) => {
         const promoTexto = item.Promotion ? `<span class="badge bg-success">${item.Promotion.description}</span>` : '<span class="text-muted">-</span>';
         
@@ -193,15 +214,203 @@ function renderizarCarrito() {
             </tr>
         `;
         tablaBody.innerHTML += fila;
-        totalCalculado += item.Price;
+        totalCalculado += item.Price;//Suma el precio al total
     });
 
-    inputTotal.value = totalCalculado.toFixed(2);
+    inputTotal.value = totalCalculado.toFixed(2);//Actualiza el total en el input
 }
 
 function removerItemDelCarrito(index) {
     carritoDetalles.splice(index, 1); // Elimina el ítem del array por su índice
     renderizarCarrito(); // Vuelve a dibujar la tabla y recalcular el total
+}
+
+// Función genérica para cargar datos en los combos (select) desde la API
+// Parámetros:
+// - url: endpoint de la API para obtener los datos
+// - selectId: id del elemento select en el HTML
+// - valorCampo: nombre del campo que se usará como value en las options
+// - textoCampo: nombre del campo que se mostrará como texto en las options
+// - textoDefault: texto para la opción por defecto
+async function cargarCombos(url, selectId, valorCampo, textoCampo, textoDefault = "Seleccione una opcion..."){
+    const select = document.getElementById(selectId);//El id de la tabla a la que va a hacer select
+    if (!select) {
+        return
+    };
+    select.disabled = true;
+    select.innerHTML = `<option value="">Cargando...</option>`;
+    try {
+        const response = await fetch(url);//Hace fetch a la url correspondiente
+        if(!response.ok) {
+            throw new Error(`Error: ${response.status} al cargar ${selectId}`);
+        }
+        const data = await response.json();
+        select.innerHTML = '';
+
+        const opcionDefault = document.createElement('option');
+        opcionDefault.value = '';
+        opcionDefault.textContent = textoDefault;//Texto default dependiendo del combobox
+        select.appendChild(opcionDefault);
+
+        data.forEach(item => {//Carga el combo
+            const opcion = document.createElement('option');
+            opcion.value = item[valorCampo];
+            opcion.textContent = item[textoCampo];
+            select.appendChild(opcion);
+        });
+        
+    }catch(error) {
+        console.error(`Error al cargar ${selectId}:`, error);
+        select.innerHTML = `<option value="">Error al cargar</option>`;
+    }finally{
+        select.disabled = false;
+    }
+}
+
+async function cargarCombosPromociones(url, selectId, valorCampo, textoCampo, textoDefault) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+    
+    select.disabled = true;
+    select.innerHTML = `<option value="">Cargando...</option>`;
+    
+    try {
+        const response = await fetch(url);
+        if (!response.ok) { throw new Error(`Error al cargar ${selectId}`); }
+        const data = await response.json();
+        
+        select.innerHTML = '';
+        
+        const opcionDefault = document.createElement('option'); 
+        opcionDefault.value = ""; 
+        opcionDefault.textContent = textoDefault; 
+        select.appendChild(opcionDefault);//Agrega una opción por defecto
+
+        data.forEach(item => {
+            const opcion = document.createElement('option');
+            opcion.value = item[valorCampo]; 
+            opcion.textContent = item[textoCampo]; 
+            
+            opcion.dataset.descuento = item.valorDescuento; 
+            opcion.dataset.descripcion = item[textoCampo];
+            
+            select.appendChild(opcion);
+        });
+    } catch (error) {
+        console.error(`Error al cargar ${selectId}:`, error);
+        select.innerHTML = `<option value="">Error al cargar</option>`;
+    } finally {
+        select.disabled = false;
+    }
+}
+
+
+async function cargarCombosPrecios(url, selectId, valorCampo, textoCampo, precioCampo, textoDefault = "Seleccione una opcion...") {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+    select.disabled = true;
+    select.innerHTML = `<option value="">Cargando...</option>`;
+    try {
+        const response = await fetch(url);
+        if (!response.ok) { throw new Error(`Error al cargar ${selectId}`); }
+        const data = await response.json();
+        select.innerHTML = '';
+        const opcionDefault = document.createElement('option');
+        opcionDefault.value = "";
+        opcionDefault.textContent = textoDefault;
+        opcionDefault.dataset.precio = "0";
+        select.appendChild(opcionDefault);
+        data.forEach(item => {
+            const opcion = document.createElement('option');
+            opcion.value = item[valorCampo]; 
+            opcion.textContent = item[textoCampo];
+            opcion.dataset.precio = item[precioCampo]; 
+            select.appendChild(opcion);
+        });
+    } catch (error) { console.error(`Error al cargar ${selectId}:`, error); }
+    finally { select.disabled = false; }
+}
+
+function poblarFuncionesCombo(funciones, selectId, textoDefault) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+
+    select.innerHTML = '';
+    select.appendChild(new Option(textoDefault, ''));//Opción por defecto 
+
+    funciones.forEach(func => {
+        const opcion = document.createElement('option');
+        const fechaHora = new Date(func.functionDate);
+        const textoOpcion = `${func.film} - ${func.room} - ${fechaHora.toLocaleDateString('es-AR')} ${fechaHora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}`;
+
+        opcion.value = func.idFuncion; // El valor es el ID
+        opcion.textContent = textoOpcion; // El texto es "Pelicula - Sala - Hora"
+        
+        opcion.dataset.film = func.film;
+        opcion.dataset.room = func.room;
+        opcion.dataset.precio = func.precio;
+        opcion.dataset.fechaCompleta = func.functionDate;
+
+        select.appendChild(opcion);
+    });
+    select.disabled = false;
+}
+
+
+function actualizarPrecio(selectElement, inputPrecioId) {
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+    const precio = selectedOption.dataset.precio || 0;
+    document.getElementById(inputPrecioId).value = parseFloat(precio).toFixed(2);
+}
+
+// Busca y carga los asientos disponibles para una función seleccionada
+// Se ejecuta cuando el usuario selecciona una función en el combo
+// Actualiza el combo de asientos y el precio del ticket
+// Deshabilita el combo de asientos mientras se cargan los datos
+async function buscarAsientos() {
+    const selectFuncion = document.getElementById('ticket-funcion');
+    const selectAsiento = document.getElementById('ticket-asiento');
+    const inputPrecio = document.getElementById('ticket-precio');
+    
+    const funcionSeleccionada = selectFuncion.options[selectFuncion.selectedIndex];
+    
+    if (!funcionSeleccionada || !funcionSeleccionada.value) {
+        
+        selectAsiento.innerHTML = '<option value="">Seleccione función...</option>';
+        selectAsiento.disabled = true;
+        return;
+    }
+
+    const precioFuncion = parseFloat(funcionSeleccionada.dataset.precio || 0).toFixed(2);
+    const idFuncion = funcionSeleccionada.value;
+
+    inputPrecio.value = precioFuncion;
+    
+    selectAsiento.disabled = true;
+    selectAsiento.innerHTML = '<option value="">Buscando asientos...</option>';
+    
+    try {
+        const url = `https://localhost:7169/api/Additionals/Asientos/disponibles/${idFuncion}`;
+        const response = await fetch(url);
+        if (!response.ok) { throw new Error('No se encontraron asientos'); }
+        const asientos = await response.json();
+        
+        selectAsiento.innerHTML = '';
+        selectAsiento.appendChild(new Option('Seleccione un asiento...', ''));
+        
+        asientos.forEach(asiento => {
+            const opcion = document.createElement('option');//Crea una opción por cada asiento
+            opcion.value = asiento.idAsiento // Valor "F-12"
+            opcion.textContent = `Fila: ${asiento.seatRow}, Asiento: ${asiento.seatNumber}`;
+            opcion.dataset.fila = asiento.seatRow;
+            opcion.dataset.numero = asiento.seatNumber;
+            selectAsiento.appendChild(opcion);
+        });
+        selectAsiento.disabled = false;
+    } catch (error) {
+        console.error(error);
+        selectAsiento.innerHTML = '<option value="">Error al cargar asientos</option>';
+    }
 }
 
 // Función para validar si existe un cliente con el DNI ingresado
@@ -345,8 +554,6 @@ async function guardarFactura() {
             throw new Error('Por favor complete todos los campos obligatorios');
         }
 
-        console.log('Datos de la factura a guardar:', facturaData);
-
         try{
             const url = 'https://localhost:7169/api/Invoices'
             const response = await fetch(url, {
@@ -478,7 +685,7 @@ async function buscarFacturas() {
                                         <div class="col-md-6">
                                             <h6 class="text-info mb-2 fw-bold">Información General</h6>
                                             <p class="fs-6"><strong>ID:</strong> ${factura.invoiceId || 'N/A'}</p>
-                                            <p class="fs-6"><strong>Total:</strong> $${factura.detailInvoices.price || '0.00'}</p>
+                                            <p class="fs-6"><strong>Total:</strong> $${factura.detailInvoices.reduce((total, item) => total + parseFloat(item.price || 0), 0).toFixed(2)}</p>
                                             <p class="fs-6"><strong>Fecha de creación:</strong> ${factura.invoiceDate}</p>
                                             <p class="fs-6"><strong>Estado del pago:</strong> <span class="badge bg-${factura.purchaseStatus === 'Aprobada' ? 'success' : 'warning'}">${factura.purchaseStatus}</span></p>
                                         </div>
@@ -627,7 +834,7 @@ async function cargarFacturas() {
                                         <div class="col-md-6">
                                             <h6 class="text-info mb-2 fw-bold">Información General</h6>
                                             <p class="fs-6"><strong>ID:</strong> ${factura.invoiceId || 'N/A'}</p>
-                                            <p class="fs-6"><strong>Total:</strong> $${factura.detailInvoices.price || '0.00'}</p>
+                                            <p class="fs-6"><strong>Total:</strong> $${factura.detailInvoices.reduce((total, item) => total + parseFloat(item.price || 0), 0).toFixed(2)}</p>
                                             <p class="fs-6"><strong>Fecha de creación:</strong> ${factura.invoiceDate}</p>
                                             <p class="fs-6"><strong>Estado del pago:</strong> <span class="badge bg-${factura.purchaseStatus === 'Aprobada' ? 'success' : 'warning'}">${factura.purchaseStatus}</span></p>
                                         </div>
@@ -826,183 +1033,4 @@ async function eliminarFactura(facturaId) {
             confirmButtonColor: '#dc3545'
         });
     }
-}
-
-async function cargarCombos(url, selectId, valorCampo, textoCampo, textoDefault = "Seleccione una opcion..."){
-    const select = document.getElementById(selectId);//El id de la tabla a la que va a hacer select
-    if (!select) {
-        return
-    };
-    select.disabled = true;
-    select.innerHTML = `<option value="">Cargando...</option>`;
-    try {
-        const response = await fetch(url);//Hace fetch a la url correspondiente
-        if(!response.ok) {
-            throw new Error(`Error: ${response.status} al cargar ${selectId}`);
-        }
-        const data = await response.json();
-        select.innerHTML = '';
-
-        const opcionDefault = document.createElement('option');
-        opcionDefault.value = '';
-        opcionDefault.textContent = textoDefault;//Texto default dependiendo del combobox
-        select.appendChild(opcionDefault);
-
-        data.forEach(item => {//Carga el combo
-            const opcion = document.createElement('option');
-            opcion.value = item[valorCampo];
-            opcion.textContent = item[textoCampo];
-            select.appendChild(opcion);
-        });
-        
-    }catch(error) {
-        console.error(`Error al cargar ${selectId}:`, error);
-        select.innerHTML = `<option value="">Error al cargar</option>`;
-    }finally{
-        select.disabled = false;
-    }
-}
-
-async function cargarCombosPromociones(url, selectId, valorCampo, textoCampo, textoDefault) {
-    const select = document.getElementById(selectId);
-    if (!select) return;
-    
-    select.disabled = true;
-    select.innerHTML = `<option value="">Cargando...</option>`;
-    
-    try {
-        const response = await fetch(url);
-        if (!response.ok) { throw new Error(`Error al cargar ${selectId}`); }
-        const data = await response.json();
-        
-        select.innerHTML = '';
-        
-        const opcionDefault = document.createElement('option'); 
-        opcionDefault.value = ""; 
-        opcionDefault.textContent = textoDefault; 
-        select.appendChild(opcionDefault); 
-
-        data.forEach(item => {
-            const opcion = document.createElement('option');
-            opcion.value = item[valorCampo]; 
-            opcion.textContent = item[textoCampo]; 
-            
-            opcion.dataset.descuento = item.valorDescuento; 
-            opcion.dataset.descripcion = item[textoCampo];
-            
-            select.appendChild(opcion);
-        });
-    } catch (error) {
-        console.error(`Error al cargar ${selectId}:`, error);
-        select.innerHTML = `<option value="">Error al cargar</option>`;
-    } finally {
-        select.disabled = false;
-    }
-}
-
-
-async function cargarCombosPrecios(url, selectId, valorCampo, textoCampo, precioCampo, textoDefault = "Seleccione una opcion...") {
-    const select = document.getElementById(selectId);
-    if (!select) return;
-    select.disabled = true;
-    select.innerHTML = `<option value="">Cargando...</option>`;
-    try {
-        const response = await fetch(url);
-        if (!response.ok) { throw new Error(`Error al cargar ${selectId}`); }
-        const data = await response.json();
-        select.innerHTML = '';
-        const opcionDefault = document.createElement('option');
-        opcionDefault.value = "";
-        opcionDefault.textContent = textoDefault;
-        opcionDefault.dataset.precio = "0";
-        select.appendChild(opcionDefault);
-        data.forEach(item => {
-            const opcion = document.createElement('option');
-            opcion.value = item[valorCampo]; 
-            opcion.textContent = item[textoCampo];
-            opcion.dataset.precio = item[precioCampo]; 
-            select.appendChild(opcion);
-        });
-    } catch (error) { console.error(`Error al cargar ${selectId}:`, error); }
-    finally { select.disabled = false; }
-}
-
-
-
-
-function actualizarPrecio(selectElement, inputPrecioId) {
-    const selectedOption = selectElement.options[selectElement.selectedIndex];
-    const precio = selectedOption.dataset.precio || 0;
-    document.getElementById(inputPrecioId).value = parseFloat(precio).toFixed(2);
-}
-
-async function buscarAsientos() {
-    const selectFuncion = document.getElementById('ticket-funcion');
-    const selectAsiento = document.getElementById('ticket-asiento');
-    const inputPrecio = document.getElementById('ticket-precio');
-    
-    const funcionSeleccionada = selectFuncion.options[selectFuncion.selectedIndex];
-    
-    if (!funcionSeleccionada || !funcionSeleccionada.value) {
-        
-        selectAsiento.innerHTML = '<option value="">Seleccione función...</option>';
-        selectAsiento.disabled = true;
-        return;
-    }
-
-    const precioFuncion = parseFloat(funcionSeleccionada.dataset.precio || 0).toFixed(2);
-    const idFuncion = funcionSeleccionada.value;
-
-    inputPrecio.value = precioFuncion;
-    
-    selectAsiento.disabled = true;
-    selectAsiento.innerHTML = '<option value="">Buscando asientos...</option>';
-    
-    try {
-        const url = `https://localhost:7169/api/Additionals/Asientos/disponibles/${idFuncion}`;
-        const response = await fetch(url);
-        if (!response.ok) { throw new Error('No se encontraron asientos'); }
-        const asientos = await response.json();
-        
-        selectAsiento.innerHTML = '';
-        selectAsiento.appendChild(new Option('Seleccione un asiento...', ''));
-        
-        asientos.forEach(asiento => {
-            const opcion = document.createElement('option');
-            opcion.value = asiento.idAsiento // Valor "F-12"
-            opcion.textContent = `Fila: ${asiento.seatRow}, Asiento: ${asiento.seatNumber}`;
-            opcion.dataset.fila = asiento.seatRow;
-            opcion.dataset.numero = asiento.seatNumber;
-            selectAsiento.appendChild(opcion);
-        });
-        selectAsiento.disabled = false;
-    } catch (error) {
-        console.error(error);
-        selectAsiento.innerHTML = '<option value="">Error al cargar asientos</option>';
-    }
-}
-
-function poblarFuncionesCombo(funciones, selectId, textoDefault) {
-    const select = document.getElementById(selectId);
-    if (!select) return;
-
-    select.innerHTML = '';
-    select.appendChild(new Option(textoDefault, ''));
-
-    funciones.forEach(func => {
-        const opcion = document.createElement('option');
-        const fechaHora = new Date(func.functionDate);
-        const textoOpcion = `${func.film} - ${func.room} - ${fechaHora.toLocaleDateString('es-AR')} ${fechaHora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}`;
-
-        opcion.value = func.idFuncion; // El valor es el ID
-        opcion.textContent = textoOpcion; // El texto es "Pelicula - Sala - Hora"
-        
-        opcion.dataset.film = func.film;
-        opcion.dataset.room = func.room;
-        opcion.dataset.precio = func.precio;
-        opcion.dataset.fechaCompleta = func.functionDate;
-
-        select.appendChild(opcion);
-    });
-    select.disabled = false;
 }
