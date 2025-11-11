@@ -75,7 +75,8 @@ const sections = {
             </div>
         </main>
     `,
-    formCliente: `<main class="main-content p-4">
+    formCliente: `
+    <main class="main-content p-4">
 
     <h1 class="mb-4 fw-bold" id="form-cliente-titulo">Agregar Nuevo Cliente</h1>
     <p class="lead">Completá todos los campos para registrar un nuevo cliente.</p>
@@ -154,63 +155,63 @@ const sections = {
     </main>
     `,
     empleados : `
-        <main class="container-fluid py-4 px-4 main-empleados">
-            <h2 class="mb-4 fw-bold">Administración de Empleados</h2>
+    <main class="container-fluid py-4 px-4 main-empleados">
+        <h2 class="mb-4 fw-bold">Administración de Empleados</h2>
 
-            <div class="row mb-4">
-            <div class="col-lg-6">
-                <div class="d-flex">
-                <div class="input-group me-2">
-                    <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control"  placeholder="Buscar por DNI..." id="buscar-empleados">
-                </div>
-                <button class="btn btn-primary d-flex align-items-center" type="button" id="boton-buscar"><i class="bi bi-search me-2"></i>Buscar</button>
-                </div>
+        <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="d-flex">
+            <div class="input-group me-2">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control"  placeholder="Buscar por DNI..." id="buscar-empleados">
             </div>
-            <div class="col-lg-6 text-lg-end mt-3 mt-lg-0">
-                <a href="#formEmpleados" class="btn btn-primary" id="boton-agregar-empleados">
-                <i class="bi bi-person-plus-fill me-2"></i> Agregar Empleado</a>
+            <button class="btn btn-primary d-flex align-items-center" type="button" id="boton-buscar"><i class="bi bi-search me-2"></i>Buscar</button>
             </div>
-            </div>
+        </div>
+        <div class="col-lg-6 text-lg-end mt-3 mt-lg-0">
+            <a href="#formEmpleados" class="btn btn-primary" id="boton-agregar-empleados">
+            <i class="bi bi-person-plus-fill me-2"></i> Agregar Empleado</a>
+        </div>
+        </div>
 
-            <div class="table-responsive">
-            <table class="table table-dark table-hover align-middle">
-                <thead>
-                <tr>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Apellido</th>
-                    <th scope="col">DNI</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-                </thead>
-                <tbody id="tabla-empleados-body">
-                <tr><td colspan="5" class="text-center">Cargando...</td></tr>
-                </tbody>
-            </table>
-            </div>
+        <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle">
+            <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido</th>
+                <th scope="col">DNI</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Acciones</th>
+            </tr>
+            </thead>
+            <tbody id="tabla-empleados-body">
+            <tr><td colspan="5" class="text-center">Cargando...</td></tr>
+            </tbody>
+        </table>
+        </div>
 
-            <div class="d-flex justify-content-between align-items-center mt-4">
-            <div class="text-result" id="total-empleados">
-                Mostrando 0 de 0 resultados
-            </div>
-            <nav aria-label="Paginación de empleados">
-                <ul class="pagination pagination-dark mb-0">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
-                </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-                <li class="page-item"><a class="page-link" href="#">10</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Siguiente</a>
-                </li>
-                </ul>
-            </nav>
-            </div>
-        </main>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+        <div class="text-result" id="total-empleados">
+            Mostrando 0 de 0 resultados
+        </div>
+        <nav aria-label="Paginación de empleados">
+            <ul class="pagination pagination-dark mb-0">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+            <li class="page-item"><a class="page-link" href="#">10</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Siguiente</a>
+            </li>
+            </ul>
+        </nav>
+        </div>
+    </main>
     `,
     formEmpleados: `
     <main class="main-content p-4">
@@ -275,8 +276,8 @@ const sections = {
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="empleado-contraseña" class="form-label">Contraseña Sistema</label>
-                        <input type="text" class="form-control" id="empleado-contraseña" placeholder="Ej: $1a_Bcd2/&5">
+                        <label for="empleado-contrasenia" class="form-label">Contraseña Sistema</label>
+                        <input type="text" class="form-control" id="empleado-contrasenia" placeholder="Ej: $1a_Bcd2/&5">
                     </div>
                 </div>
             </div>
