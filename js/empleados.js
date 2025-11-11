@@ -351,6 +351,57 @@ async function darEmpleadoDeAlta(codigo, dni, nombre) {
     });
 }
 
+/* ------------------------------------------------------------------------ */
+//Funcion para cargar combos
+async function cargarCombos(url, selectId, valorCampo, textoCampo, textoDefault = "Seleccione una opcion...") {
+    const select = document.getElementById(selectId);
+    if (!select) {
+        console.error(`No se encontró el elemento con ID: ${selectId}`);
+        return
+    };
+    
+    console.log(`Cargando combo: ${selectId} desde URL: ${url}`); // Log agregado
+    
+    select.disabled = true;
+    select.innerHTML = `<option value="">Cargando...</option>`;
+    try {
+        const response = await fetch(url);
+
+        if(!response.ok) {
+            console.error(`Error ${response.status} al cargar ${selectId} desde ${url}`); // Log mejorado
+            throw new Error(`Error: ${response.status} al cargar ${selectId}`);
+        }
+
+        const data = await response.json();
+        console.log(`Datos recibidos para ${selectId}:`, data); // Log agregado
+        
+        select.innerHTML = '';
+
+        const opcionDefault = document.createElement('option');
+        opcionDefault.value = '';
+        opcionDefault.textContent = textoDefault;
+        select.appendChild(opcionDefault);
+
+        //Carga el combo
+        data.forEach(item => 
+        { 
+            const opcion = document.createElement('option');
+            opcion.value = item[valorCampo];
+            opcion.textContent = item[textoCampo];
+            select.appendChild(opcion);
+        });
+        
+        console.log(`Combo ${selectId} cargado exitosamente con ${data.length} elementos`); // Log agregado
+        
+    }
+    catch(error){
+        console.error(`Error detallado al cargar ${selectId}:`, error); // Log mejorado
+        select.innerHTML = `<option value="">Error al cargar</option>`;
+    }finally{
+        select.disabled = false;
+    }
+}
+
 async function cargarDatosEmpleadosParaEdicion(dni) {
     const url = `https://localhost:7169/api/Employees/${dni}`;
     try{
@@ -544,16 +595,16 @@ async function setupFormEmpleadoListeners() {
                     contrasenia: document.getElementById('empleado-contrasenia').value,
                     activo: document.getElementById('empleado-activo').value === 'true',
                     barrio: {
-                        idBarrio: 0,
+                        idBarrio: idBarrio,
                         descripcion: descBarrio
                     },
                     contacto: {
-                        idContacto: 0, // ID de contacto
+                        idContacto: idContacto, // ID de contacto
                         descripcion: descContacto,
                         idTipoContacto: idTipoContacto
                     },
                     rol: {
-                        idRol: 0,
+                        idRol: idRol,
                         descripcion: descRol
                     }
                 };
@@ -653,8 +704,7 @@ async function setupFormEmpleadoListeners() {
             btnSubmit.classList.remove('btn-success')
             btnSubmit.classList.add('btn-primary')
             await Promise.all(promesasCombos);
-            await cargarDatosEmpleadoParaEdicion(dniEmpleadoEditar)
-            dniEmpleadoEditar = null;
+            await cargarDatosEmpleadosParaEdicion(dniParaEditar) // Usar dniParaEditar aquí también
         }else{//Disenio para agregar
             titulo.textContent = 'Agregar Empleado'
             btnSubmit.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Agregar Empleado'
@@ -667,43 +717,3 @@ async function setupFormEmpleadoListeners() {
     }
 }
 
-//Funcion para cargar combos
-async function cargarCombos(url, selectId, valorCampo, textoCampo, textoDefault = "Seleccione una opcion...") {
-    const select = document.getElementById(selectId);//El id de la tabla a la que va a hacer select
-    if (!select) {
-        return
-    };
-    select.disabled = true;
-    select.innerHTML = `<option value="">Cargando...</option>`;
-    try {
-        const response = await fetch(url); //Hace fetch a la url correspondiente
-
-        if(!response.ok) {
-            throw new Error(`Error: ${response.status} al cargar ${selectId}`);
-        }
-
-        const data = await response.json();
-        select.innerHTML = '';
-
-        const opcionDefault = document.createElement('option');
-        opcionDefault.value = '';
-        opcionDefault.textContent = textoDefault; //Texto default dependiendo del combobox
-        select.appendChild(opcionDefault);
-
-        //Carga el combo
-        data.forEach(item => 
-        { 
-            const opcion = document.createElement('option');
-            opcion.value = item[valorCampo];
-            opcion.textContent = item[textoCampo];
-            select.appendChild(opcion);
-        });
-        
-    }
-    catch(error){
-        console.error(`Error al cargar ${selectId}:`, error);
-        select.innerHTML = `<option value="">Error al cargar</option>`;
-    }finally{
-        select.disabled = false;
-    }
-}
