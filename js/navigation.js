@@ -385,8 +385,8 @@ formFactura: ` <main class="main-content p-4">
     <form id="form-agregar-factura" class="col-lg-10">
         <div class="row">
             <div class="col-md-6">
-                <div class="mb-3"><label for="factura-dni-cliente" class="form-label">DNI del Cliente</label><input type="text" class="form-control" id="factura-dni-cliente" placeholder="Ej: 46554887"></div>
-                <div class="mb-3"><label for="factura-dni-empleado" class="form-label">DNI del Empleado</label><input type="text" class="form-control" id="factura-dni-empleado" placeholder="Ej: 12345678"></div>
+                <div class="mb-3"><label for="factura-dni-cliente" class="form-label">DNI del Cliente</label><select class="form-select" id="factura-dni-cliente"><option value="">Cargando clientes...</option></select></div>
+                <div class="mb-3"><label for="factura-dni-empleado" class="form-label">Empleado</label><select class="form-select" id="factura-dni-empleado"><option value="">Cargando empleados...</option></select></div>
                 <div class="mb-3"><label for="factura-fecha" class="form-label">Fecha</label><input type="date" class="form-control" id="factura-fecha"></div>
             </div>
             <div class="col-md-6">

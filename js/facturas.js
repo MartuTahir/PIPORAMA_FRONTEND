@@ -25,8 +25,10 @@ async function setupFormFacturaListeners() {
         
         console.log("Configurando formulario de facturas...");
         const urlBase = 'https://localhost:7169/api/Additionals/';
-        
+        const urlBasePersonas = 'https://localhost:7169/api/';
         // --- Carga de Combos (Encabezado y Detalles) ---
+        cargarCombosPersonas(`${urlBasePersonas}Clients`, 'factura-dni-cliente', 'dniCliente', 'nombre', 'apellido', 'Seleccione un Cliente...');
+        cargarCombosPersonas(`${urlBasePersonas}Employees`, 'factura-dni-empleado', 'dniEmpleado', 'nomEmpleado', 'apeEmpleado', 'Seleccione un Empleado...');
         cargarCombos(`${urlBase}medios-pago`, 'factura-metodo-pago', 'medioPago', 'medioPago', 'Seleccione Método...');
         cargarCombos(`${urlBase}estados-compra`, 'factura-estado', 'descripcion', 'descripcion', 'Seleccione Estado...');
         cargarCombos(`${urlBase}formas-compra`, 'factura-forma-compra', 'formaCompra1', 'formaCompra1', 'Seleccione Forma...');
@@ -329,6 +331,38 @@ async function cargarCombosPrecios(url, selectId, valorCampo, textoCampo, precio
         });
     } catch (error) { console.error(`Error al cargar ${selectId}:`, error); }
     finally { select.disabled = false; }
+}
+
+async function cargarCombosPersonas(url, selectId, propDni, propNombre, propApellido, textoDefault) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+    
+    select.disabled = true;
+    select.innerHTML = `<option value="">Cargando...</option>`;
+    
+    try {
+        const response = await fetch(url);
+        if (!response.ok) { throw new Error(`Error al cargar ${selectId}`); }
+        const data = await response.json();
+        
+        select.innerHTML = '';
+        select.appendChild(new Option(textoDefault, '')); // Opción default
+
+        data.forEach(item => {
+            const opcion = document.createElement('option');
+            
+            opcion.value = item[propDni]; 
+            
+            opcion.textContent = `${item[propNombre]} ${item[propApellido]} (${item[propDni]})`; 
+            
+            select.appendChild(opcion);
+        });
+    } catch (error) {
+        console.error(`Error al cargar ${selectId}:`, error);
+        select.innerHTML = `<option value="">Error al cargar</option>`;
+    } finally {
+        select.disabled = false;
+    }
 }
 
 function poblarFuncionesCombo(funciones, selectId, textoDefault) {
