@@ -1,4 +1,4 @@
-
+let dniEmpleadoEditar = null;
 
 //Funcion para cargar tabla
 async function cargarEmpleados() {
@@ -351,39 +351,94 @@ async function darEmpleadoDeAlta(codigo, dni, nombre) {
     });
 }
 
-async function cargarDatosEmpleadoParaEdicion(dni) {
+/* ------------------------------------------------------------------------ */
+//Funcion para cargar combos
+async function cargarCombos(url, selectId, valorCampo, textoCampo, textoDefault = "Seleccione una opcion...") {
+    const select = document.getElementById(selectId);
+    if (!select) {
+        console.error(`No se encontró el elemento con ID: ${selectId}`);
+        return
+    };
+    
+    console.log(`Cargando combo: ${selectId} desde URL: ${url}`); // Log agregado
+    
+    select.disabled = true;
+    select.innerHTML = `<option value="">Cargando...</option>`;
+    try {
+        const response = await fetch(url);
+
+        if(!response.ok) {
+            console.error(`Error ${response.status} al cargar ${selectId} desde ${url}`); // Log mejorado
+            throw new Error(`Error: ${response.status} al cargar ${selectId}`);
+        }
+
+        const data = await response.json();
+        console.log(`Datos recibidos para ${selectId}:`, data); // Log agregado
+        
+        select.innerHTML = '';
+
+        const opcionDefault = document.createElement('option');
+        opcionDefault.value = '';
+        opcionDefault.textContent = textoDefault;
+        select.appendChild(opcionDefault);
+
+        //Carga el combo
+        data.forEach(item => 
+        { 
+            const opcion = document.createElement('option');
+            opcion.value = item[valorCampo];
+            opcion.textContent = item[textoCampo];
+            select.appendChild(opcion);
+        });
+        
+        console.log(`Combo ${selectId} cargado exitosamente con ${data.length} elementos`); // Log agregado
+        
+    }
+    catch(error){
+        console.error(`Error detallado al cargar ${selectId}:`, error); // Log mejorado
+        select.innerHTML = `<option value="">Error al cargar</option>`;
+    }finally{
+        select.disabled = false;
+    }
+}
+
+async function cargarDatosEmpleadosParaEdicion(dni) {
     const url = `https://localhost:7169/api/Employees/${dni}`;
     try{
         const response = await fetch(url);
         if(!response.ok){
-            throw new Error(`Error ${response.status}: No se pudo encontrar al empleados con dni: ${dni}`);
+            throw new Error(`Error ${response.status}: No se pudo encontrar al empleado con dni: ${dni}`);
         }
-        const empleados = await response.json();
+        const empleado = await response.json();
 
-        document.getElementById('empleados-codigo').value = empleados.idEmpleado;
-        document.getElementById('empleados-nombre').value = empleados.nomEmpleado;
-        document.getElementById('empleados-apellido').value = empleados.apeEmpleado;
-        document.getElementById('empleados-dni').value = empleados.dniEmpleado;
-        document.getElementById('empleados-usuario').value = empleados.usuario;
-        document.getElementById('empleados-contraseña').value = empleados.contraseña;
-        document.getElementById('empleados-activo').value = empleados.activo.toString();
-        document.getElementById('empleados-barrio').value = empleados.idBarrio;
-        if(empleados.contacto){
-            document.getElementById('empleados-id-contacto').value = empleados.contacto.idContacto;
-            document.getElementById('empleados-contacto').value = empleados.contacto.descripcion;
-            document.getElementById('empleados-tipo-contacto').value = empleados.contacto.idTipoContacto;
+        document.getElementById('empleado-codigo').value = empleado.idEmpleado;
+        document.getElementById('empleado-dni').value = empleado.dniEmpleado;
+
+        document.getElementById('empleado-nombre').value = empleado.nomEmpleado;
+        document.getElementById('empleado-apellido').value = empleado.apeEmpleado;
+
+        document.getElementById('empleado-usuario').value = empleado.usuario;
+        document.getElementById('empleado-contrasenia').value = empleado.contrasenia;
+
+        document.getElementById('empleado-activo').value = empleado.activo.toString();
+        if(empleado.barrio){
+            document.getElementById('empleado-barrio').value = empleado.barrio.idBarrio;
         }
-        if(empleados.rol){
-            document.getElementById('empleados-id-rol').value = empleados.rol.idRol;
-            document.getElementById('empleados-rol').value = empleados.rol.descripcion;
+        if(empleado.contacto){
+            document.getElementById('empleado-id-contacto').value = empleado.contacto.idContacto;
+            document.getElementById('empleado-contacto').value = empleado.contacto.descripcion;
+            document.getElementById('empleado-tipo-contacto').value = empleado.contacto.idTipoContacto;
+        }
+        if(empleado.rol){
+            document.getElementById('empleado-rol').value = empleado.rol.idRol;
         }
 
     }catch (error){
-        
+        console.error('Error al cargar datos del empleado para edición:', error);
         Swal.fire({
             icon: 'error',
             title: 'Error al cargar datos',
-            text: 'No se pudieron cargar los datos del empleados para editar.',
+            text: 'No se pudieron cargar los datos del empleado para editar.',
             background: '#1e1d2c', color: '#ffffff'
         });
         navigateTo('empleados'); 
@@ -422,8 +477,6 @@ async function setupFormEmpleadoListeners() {
 
             await Promise.all(promesasCombos); //El promise.all espera a que se carguen todos los combos antes de seguir
             await cargarDatosEmpleadosParaEdicion(dniParaEditar) // Rellena el formulario con los datos del empleado a editar
-            
-            
         }
         else{
             // --- MODO AGREGAR ---
@@ -438,7 +491,7 @@ async function setupFormEmpleadoListeners() {
         }
 
         // Listener del boton submit
-        formAgregarEmpleados.addEventListener('submit', async (e) => {
+        formAgregarEmpleado.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const regexSoloNumeros = /^[0-9]+$/;//Le pregunte a la IA como validar los campos y me tiro estas dos lineas
@@ -450,22 +503,9 @@ async function setupFormEmpleadoListeners() {
             const nombreInput = document.getElementById('empleado-nombre').value;
             const apellidoInput = document.getElementById('empleado-apellido').value;
             const usuarioInput = document.getElementById('empleado-usuario').value;
-            const contraseñaInput = document.getElementById('empleado-contraseña').value;
-            const idBarrioVal = parseInt(document.getElementById('empleado-barrio').value);
-            const idTipoContactoVal = parseInt(document.getElementById('empleado-tipo-contacto').value);
-            const contactoDesc = document.getElementById('empleado-contacto').value;
-            const idRolVal = parseInt(document.getElementById('empleado-rol').value);
+            const contraseñaInput = document.getElementById('empleado-contrasenia').value;
 
             //Validaciones
-            if(!regexSoloNumeros.test(dniInput)){
-                Swal.fire({
-                    icon: "warning",
-                    title: "DNI inválido",
-                    text: "El DNI debe contener solo números.",
-                });
-                return;
-            }
-
             if(!regexSoloLetras.test(nombreInput)){
                 Swal.fire({
                     icon: "warning",
@@ -483,6 +523,15 @@ async function setupFormEmpleadoListeners() {
                 });
                 return;
             }
+    
+            if(!regexSoloNumeros.test(dniInput)){
+                Swal.fire({
+                    icon: "warning",
+                    title: "DNI inválido",
+                    text: "El DNI debe contener solo números.",
+                });
+                return;
+            }
 
             if(!regexSoloLetras.test(usuarioInput)){
                 Swal.fire({
@@ -493,7 +542,7 @@ async function setupFormEmpleadoListeners() {
                 return;
             }
 
-            if(!regexSoloLetras.test(contraseñaInput)){
+            if(contraseñaInput.length < 4){
                 Swal.fire({
                     icon: "warning",
                     title: "Contraseña inválida",
@@ -502,7 +551,23 @@ async function setupFormEmpleadoListeners() {
                 return;
             }
 
-            if (isNaN(idBarrioVal) || !contactoDesc || isNaN(idTipoContactoVal) || isNaN(idRolVal)) {
+            // Barrio
+            const selectBarrio = document.getElementById('empleado-barrio');
+            const idBarrio = parseInt(selectBarrio.value);
+            const descBarrio = selectBarrio.options[selectBarrio.selectedIndex].text;
+
+            // Rol
+            const selectRol = document.getElementById('empleado-rol');
+            const idRol = parseInt(selectRol.value);
+            const descRol = selectRol.options[selectRol.selectedIndex].text;
+
+            // Contacto
+            const selectTipoContacto = document.getElementById('empleado-tipo-contacto');
+            const idTipoContacto = parseInt(selectTipoContacto.value);
+            const descContacto = document.getElementById('empleado-contacto').value;
+
+            // Validar que los combos estén seleccionados
+            if (isNaN(idBarrio) || !descContacto || isNaN(idTipoContacto) || isNaN(idRol)) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Campos incompletos',
@@ -510,85 +575,93 @@ async function setupFormEmpleadoListeners() {
                     background: '#1e1d2c', color: '#ffffff'
                 });
                 return;
-            } 
-            
+            }
+
             const codigo = inputCodigo.value;
 
+            const idContacto = parseInt(inputIdContacto.value) || 0;
+            
             if (codigo) {
                 // Armar el JSON que espera la api
+                // --- MODO EDITAR (PUT) ---
+                // ID del Empleado: usa el del input oculto
+                const idEmpleado = parseInt(codigo); 
                 const empleadoActualizado = {
-                    idEmpleado: parseInt(codigo),
+                    idEmpleado: idEmpleado, // ID de empleado
+                    dniEmpleado: document.getElementById('empleado-dni').value,
                     nomEmpleado: document.getElementById('empleado-nombre').value,
                     apeEmpleado: document.getElementById('empleado-apellido').value,
-                    dniEmpleado: document.getElementById('empleado-dni').value,
                     usuario: document.getElementById('empleado-usuario').value,
-                    contraseña: document.getElementById('empleado-contraseña').value,
+                    contrasenia: document.getElementById('empleado-contrasenia').value,
                     activo: document.getElementById('empleado-activo').value === 'true',
-                    idBarrio: parseInt(document.getElementById('empleado-barrio').value),
-                    contacto : {
-                        idContacto : parseInt(document.getElementById('empleado-id-contacto').value),
-                        descripcion : document.getElementById('empleado-contacto').value,
-                        idTipoContacto : parseInt(document.getElementById('empleado-tipo-contacto').value)
+                    barrio: {
+                        idBarrio: idBarrio,
+                        descripcion: descBarrio
                     },
-                    rol : {
-                        idContacto : parseInt(document.getElementById('empleado-rol').value)
+                    contacto: {
+                        idContacto: idContacto, // ID de contacto
+                        descripcion: descContacto,
+                        idTipoContacto: idTipoContacto
+                    },
+                    rol: {
+                        idRol: idRol,
+                        descripcion: descRol
                     }
                 };
                 
-                try{
-                    const url = `https://localhost:7169/api/Employees/${codigo}`;
+                // --- Lógica PUT (Editar) ---
+                try {
+                    const url = `https://localhost:7169/api/Employees/${idEmpleado}`; // El PUT suele ir al ID
                     const response = await fetch(url, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(empleadoActualizado) // Envía el JSON plano
+                        body: JSON.stringify(empleadoActualizado) 
                     });
-                    if(!response.ok){
+                    if (!response.ok) {
                         throw new Error(`Fallo la actualizacion del empleado: ${response.status}`);
                     }
-                    Swal.fire({ title: "Éxito",
-                                text: "Empleado actualizado con éxito.",
-                                icon: "success", 
-                                background: '#1e1d2c', 
-                                color: '#ffffff' });
-                    navigateTo('empleado'); //Vuelve a la pagina de empleado una vez terminado
-                }catch(error){
+                    Swal.fire({ title: "Éxito", text: "Empleado actualizado con éxito.", icon: "success", background: '#1e1d2c', color: '#ffffff' });
+                    sessionStorage.removeItem('dniEmpleadoEditar'); // Limpiar session storage
+                    navigateTo('empleados'); // Corregido a 'empleados'
+                } catch (error) {
                     console.error('Error al actualizar empleado:', error);
-                    Swal.fire({ icon: "error", 
-                        title: "Oops...", 
-                        text: "Error al actualizar: " + error.message, 
-                        background: '#1e1d2c', 
-                        color: '#ffffff' });
+                    Swal.fire({ icon: "error", title: "Oops...", text: "Error al actualizar: " + error.message, background: '#1e1d2c', color: '#ffffff' });
                 }
 
             } else {
-                //POST
+                // --- MODO AGREGAR (POST) ---
                 const empleadoNuevo = {
-                    idEmpleado: parseInt(codigo),
+                    idEmpleado: 0, // En POST, el ID de empleado es 0
+                    dniEmpleado: document.getElementById('empleado-dni').value,
                     nomEmpleado: document.getElementById('empleado-nombre').value,
                     apeEmpleado: document.getElementById('empleado-apellido').value,
-                    dniEmpleado: document.getElementById('empleado-dni').value,
                     usuario: document.getElementById('empleado-usuario').value,
-                    contraseña: document.getElementById('empleado-contraseña').value,
+                    contrasenia: document.getElementById('empleado-contrasenia').value,
                     activo: document.getElementById('empleado-activo').value === 'true',
-                    idBarrio: parseInt(document.getElementById('empleado-barrio').value),
-                    contacto : {
-                        idContacto : parseInt(document.getElementById('empleado-id-contacto').value),
-                        descripcion : document.getElementById('empleado-contacto').value,
-                        idTipoContacto : parseInt(document.getElementById('empleado-tipo-contacto').value)
+                    barrio: {
+                        idBarrio: 0,
+                        descripcion: descBarrio
                     },
-                    rol : {
-                        idContacto : parseInt(document.getElementById('empleado-rol').value)
+                    contacto: {
+                        idContacto: 0, // En POST, el ID de contacto es 0
+                        descripcion: descContacto,
+                        idTipoContacto: idTipoContacto
+                    },
+                    rol: {
+                        idRol: 0,
+                        descripcion: descRol
                     }
                 };
                 
-                try{
+                // --- Lógica POST (Agregar) ---
+                try {
                     const url = 'https://localhost:7169/api/Employees';
                     const response = await fetch(url, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(empleadoNuevo)
                     });
-                    if(!response.ok){
+                    if (!response.ok) {
                         throw new Error(`Fallo el post del empleado: ${response.status}`);
                     }
                     Swal.fire({
@@ -598,7 +671,7 @@ async function setupFormEmpleadoListeners() {
                         background: '#1e1d2c', color: '#ffffff'
                     });
                     navigateTo('empleados');
-                }catch(error){
+                } catch (error) {
                     console.error('Error al agregar empleado:', error);
                     Swal.fire({
                         icon: "error",
@@ -609,7 +682,7 @@ async function setupFormEmpleadoListeners() {
                 }
             }
         });
-        
+
         formAgregarEmpleado.dataset.listenerAgregado = 'true';
     
     } 
@@ -631,8 +704,7 @@ async function setupFormEmpleadoListeners() {
             btnSubmit.classList.remove('btn-success')
             btnSubmit.classList.add('btn-primary')
             await Promise.all(promesasCombos);
-            await cargarDatosEmpleadoParaEdicion(dniEmpleadoEditar)
-            dniEmpleadoEditar = null;
+            await cargarDatosEmpleadosParaEdicion(dniParaEditar) // Usar dniParaEditar aquí también
         }else{//Disenio para agregar
             titulo.textContent = 'Agregar Empleado'
             btnSubmit.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Agregar Empleado'
@@ -645,43 +717,3 @@ async function setupFormEmpleadoListeners() {
     }
 }
 
-//Funcion para cargar combos
-async function cargarCombos(url, selectId, valorCampo, textoCampo, textoDefault = "Seleccione una opcion...") {
-    const select = document.getElementById(selectId);//El id de la tabla a la que va a hacer select
-    if (!select) {
-        return
-    };
-    select.disabled = true;
-    select.innerHTML = `<option value="">Cargando...</option>`;
-    try {
-        const response = await fetch(url); //Hace fetch a la url correspondiente
-
-        if(!response.ok) {
-            throw new Error(`Error: ${response.status} al cargar ${selectId}`);
-        }
-
-        const data = await response.json();
-        select.innerHTML = '';
-
-        const opcionDefault = document.createElement('option');
-        opcionDefault.value = '';
-        opcionDefault.textContent = textoDefault; //Texto default dependiendo del combobox
-        select.appendChild(opcionDefault);
-
-        //Carga el combo
-        data.forEach(item => 
-        { 
-            const opcion = document.createElement('option');
-            opcion.value = item[valorCampo];
-            opcion.textContent = item[textoCampo];
-            select.appendChild(opcion);
-        });
-        
-    }
-    catch(error){
-        console.error(`Error al cargar ${selectId}:`, error);
-        select.innerHTML = `<option value="">Error al cargar</option>`;
-    }finally{
-        select.disabled = false;
-    }
-}

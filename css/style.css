@@ -9,6 +9,7 @@
     --color-surface: #161623;
     --color-text: #f2f2f2;
     --color-muted: #a1a1a1;
+    --color-bg-alt: rgb(255, 255, 255, 0.05);
     --primary: #1152d4;
     --secondary: #00d4ff;
     --accent: #7b5cff;
@@ -235,6 +236,7 @@ body.light-mode {
     --color-surface: #ffffff;
     --color-text: #1e1e1e;
     --color-muted: #6c757d;
+    --color-bg-alt: #f7f7f7;
     --primary: #1152d4;
     --secondary: #00b4d8;
     --accent: #5a6ff0;
@@ -628,6 +630,111 @@ h2 {
     background-color: var(--primary) !important;
     color: var(--color-bg) !important;
     border-color: var(--primary) !important;
+}
+
+/* ---------------------DASHBOARD------------------------------ */
+
+.card-dashboard {
+    background-color: var(--color-surface);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    border: none;
+    border-radius: var(--radius);
+    color: var(--color-text);
+    padding: 0.5rem;
+    transition: var(--transition);
+}
+
+.header-dashboard {
+    font-family: var(--font-title);
+    border-color: #6c757d7c;
+}
+
+.border-top{
+    border-top-color: #6c757d7c !important;
+}
+
+.funciones-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.icons-dashboard {
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+    color: var(--secondary);
+}
+
+.table-dashboard {
+    background-color: var(--color-surface) !important;
+    color: var(--color-text) !important;
+}
+
+.table-dashboard th,
+.table-dashboard td {
+    background-color: var(--color-surface) !important;
+    color: var(--color-text) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.table-dashboard thead th {
+    background-color: var(--color-surface) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.kpi-icon{
+    font-size: 2.5rem;
+    color: var(--secondary);
+    margin-right: 0.5rem;
+}
+
+/* Lista de películas más vistas */
+.peliculas-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.peliculas-lista li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    background: var(--color-bg-alt);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--secondary);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+
+.pelicula-nombre {
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: 0.95rem;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+}
+
+.pelicula-nombre::before {
+    content: "🎬";
+    margin-right: 0.5rem;
+    font-size: 1rem;
+}
+
+.pelicula-dato {
+    font-size: 0.85rem;
+    color: var(--secondary);
+    font-weight: 600;
+    background: rgba(41, 104, 231, 0.2);
+    padding: 0.25rem 0.6rem;
+    border-radius: 15px;
+    position: relative;
+    z-index: 1;
 }
 
 
