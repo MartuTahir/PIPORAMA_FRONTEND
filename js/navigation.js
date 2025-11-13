@@ -509,10 +509,10 @@ dashboard : `
         <div class="col-sm-6 mb-3 p-4">
             <div class="card card-dashboard">
                 <div class="card-header header-dashboard">
-                    <h5 class="card-title fw-bold mt-2">Rendimiento General</h5>
+                    <h5 class="card-title fw-bold mt-2">Rendimiento general</h5>
                 </div>
                 <div class="card-body">
-                    <p class="card-text fw-bold fs-6">Entradas vendidas por día</p>
+                    <p class="card-text fw-bold fs-6">Movimientos por dia</p>
                     <!-- Gráfico de líneas -->
                     <!-- Gráfico con id="chartEntradasDia" -->
                     <canvas id="chartEntradasDia"></canvas>
@@ -520,11 +520,11 @@ dashboard : `
                     <div class="stats d-flex justify-content-between m-4">
                         <div>
                             <p class="fs-6">Entradas vendidas</p>
-                            <span id="totalEntradas" class="fw-bold">200</span>
+                            <span id="totalEntradas" class="fw-bold"></span>
                         </div>
                         <div>
                             <p class="fs-6">Recaudación total</p>
-                            <span id="totalRecaudacion" class="fw-bold">$30,500</span>
+                            <span id="totalRecaudacion" class="fw-bold"></span>
                         </div>
                     </div>
                 </div>
@@ -547,42 +547,13 @@ dashboard : `
             </div>
             <div class="card-body border-top">
                 <p class="fs-6 fw-bold">Próximas funciones</p>
-                <div class="funciones-grid">
-                    <!-- Ejemplo nose como hacerlo con chart o si es necesario -->
-                    <div class="funcion-item">
-                        <p class="fw-bold">Avatar 2</p>
-                        <div class="d-flex">
-                            <i class="bi bi-film me-2 icons-dashboard"></i>
-                            <p>Sala 03 - 3D</p>
-                        </div>
-                        <div class="d-flex">
-                            <i class="bi bi-clock me-2 icons-dashboard"></i>
-                            <p>19:30hs</p>
-                        </div>
-                        <div class="d-flex">
-                            <i class="bi bi-translate me-2 icons-dashboard"></i>
-                            <p>Español - IMAX</p>
-                        </div>
-                    </div>
-                    <div class="funcion-item">
-                        <p class="fw-bold">Oppenheimer</p>
-                        <div class="d-flex">
-                            <i class="bi bi-film me-2 icons-dashboard"></i>
-                            <p>Sala 05 - 2D</p>
-                        </div>
-                        <div class="d-flex">
-                            <i class="bi bi-clock me-2 icons-dashboard"></i>
-                            <p>20:00hs</p>
-                        </div>
-                        <div class="d-flex">
-                            <i class="bi bi-translate me-2 icons-dashboard"></i>
-                            <p>Subtitulada - Digital</p>
-                        </div>
-                    </div>
-                </div>
+
+                <div id="funcionesGrid" class="funciones-grid row"></div>
+                <div id="funcionesMsg"></div>
             </div>
             </div>
         </div>
+
         <div class="col-sm-6 p-4">
             <div class="card card-dashboard">
             <div class="card-header header-dashboard">
@@ -594,49 +565,29 @@ dashboard : `
                         <tr>
                             <th scope="col">Nombre</th>
                             <th scope="col">Apellido</th>
-                            <th scope="col">Total</th>
+                            <th scope="col">Total de compras</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>Juan</td>
-                            <td>Perez</td>
-                            <td>$100</td>
-                        </tr>
-                        <tr>
-                            <td>Maria</td>
-                            <td>Gomez</td>
-                            <td>$200</td>
-                        </tr>
-                    </tbody>
+                    <tbody id="clientesBody"></tbody>
                 </table>
+                <div id="clientesMsg" class="text-muted small mt-2"></div>
             </div>
             </div>
         </div>
         <div class="col-sm-6 p-4">
             <div class="card card-dashboard">
             <div class="card-header header-dashboard">
-                <h5 class="card-title fw-bold mt-2">Películas y salas</h5>
+                <h5 class="card-title fw-bold mt-2">Películas</h5>
             </div>
             <div class="card-body">
-                <!-- 🎞️ Películas más vistas -->
+                <!-- Películas más vistas -->
                 <div>
                     <p class="fs-6 fw-bold">Películas más vistas</p>
-                    <ul class="peliculas-lista">
+                    <ul id="peliculasLista" class="peliculas-lista">
                         <!-- Ejemplo de item -->
-                        <li>
-                            <span class="pelicula-nombre">Avatar 2</span>
-                            <span class="pelicula-dato">Entradas: 320</span>
-                        </li>
-                        <li>
-                            <span class="pelicula-nombre">The Batman</span>
-                            <span class="pelicula-dato">Entradas: 270</span>
-                        </li>
-                        <li>
-                            <span class="pelicula-nombre">Barbie</span>
-                            <span class="pelicula-dato">Entradas: 230</span>
-                        </li>
+                        
                     </ul>
+                    <div id="peliculasMsg" class="text-muted small mt-2"></div>
                     <!-- Podría agregarse aquí si queremos compararlo visualmente -->
                 </div>
             </div>
@@ -652,11 +603,12 @@ dashboard : `
                     <!-- Agregarle gráfico de barras horizontales -->
                     <canvas id="chartProductosTop"></canvas>
                 </div>
+
                 <div class="card-body border-top">
                     <p class="fs-6 fw-bold">Recaudación total por combos</p>
                     <div class="d-flex">
                         <p class="fw-bold">Total recaudado: </p>
-                        <p class="ms-2">$500</p>
+                        <p id="recaudacionTotal" class="ms-2"></p>
                     </div>
                 </div>
             </div>
@@ -675,7 +627,7 @@ dashboard : `
                                     <i class="bi bi-arrow-up-circle kpi-icon"></i>
                                 </div>
                                 <h6>Total de entradas vendidas</h6>
-                                <span class="fs-4 fw-bold" id="total-entradas-vendidas">1500</span>
+                                <span class="fs-4 fw-bold" id="total-entradas-vendidas"></span>
                             </div>
                         </div>
                         <div class="col-6 mb-3">
@@ -685,7 +637,7 @@ dashboard : `
                                     <i class="bi bi-arrow-up-circle kpi-icon"></i>
                                 </div>
                                 <h6>Recaudación total</h6>
-                                <span class="fs-4 fw-bold" id="recaudacion-total">1500</span>
+                                <span class="fs-4 fw-bold" id="recaudacion-total"></span>
                             </div>
                         </div>
                         <div class="col-6 mb-3">
@@ -695,7 +647,7 @@ dashboard : `
                                     <i class="bi bi-arrow-up-circle kpi-icon"></i>
                                 </div>
                                 <h6>Películas activas</h6>
-                                <span class="fs-4 fw-bold" id="peliculas-activas">10</span>
+                                <span class="fs-4 fw-bold" id="peliculas-activas"></span>
                             </div>
                         </div>
                         <div class="col-6 mb-3">
@@ -704,8 +656,8 @@ dashboard : `
                                     <i class="bi bi-grid-3x3 kpi-icon"></i>
                                     <i class="bi bi-arrow-up-circle kpi-icon"></i>
                                 </div>
-                                <h6>Ocupación promedio</h6>
-                                <span class="fs-4 fw-bold" id="ocupacion-promedio">75%</span>
+                                <h6>Clientes registrados</h6>
+                                <span class="fs-4 fw-bold" id="clientes-registrados"></span>
                             </div>
                         </div>
                     </div>

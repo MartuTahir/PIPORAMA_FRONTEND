@@ -695,6 +695,13 @@ h2 {
     margin: 0;
 }
 
+.funcion-item {
+    border-radius: var(--radius);
+    border: 2px solid var(--color-bg-alt);
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
 .peliculas-lista li {
     display: flex;
     justify-content: space-between;
