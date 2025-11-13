@@ -34,7 +34,6 @@ async function getEntradasVendidas() {
                     }
         ]
         };
-
         
         const ctxEntradasDia = document.getElementById('chartEntradasDia');
         if (ctxEntradasDia) { // Verificamos que exista antes de crear el gráfico
