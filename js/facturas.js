@@ -353,7 +353,7 @@ async function cargarCombosPersonas(url, selectId, propDni, propNombre, propApel
             
             opcion.value = item[propDni]; 
             
-            opcion.textContent = `${item[propNombre]} ${item[propApellido]} (${item[propDni]})`; 
+            opcion.textContent = `${item[propNombre]} ${item[propApellido]}, DNI: ${item[propDni]}`; 
             
             select.appendChild(opcion);
         });
