@@ -1,5 +1,3 @@
-
-
 const URL = "https://localhost:7169/api/Dashboard";
 
 async function getEntradasVendidas() {
@@ -394,7 +392,6 @@ async function loadPeliculas() {
     }
 }
 
-
 //GRAFICO 4
 async function getProductosMasVendidos(){
     try{
@@ -502,15 +499,10 @@ async function getKPIsDashboard(){
 
 }
 
-
-
-/* ---
-Usamos "DOMContentLoaded" para asegurarnos de que este script
-se ejecute SOLO DESPUÉS de que todo el HTML esté cargado.
-Esto evita errores de "no se puede encontrar el elemento".
---- */
-document.addEventListener("DOMContentLoaded", function(){
-
+// Función principal que inicializa todo el dashboard
+function initDashboardInternal() {
+    console.log("Inicializando dashboard...");
+    
     // --GRAFICO 1: Recaudacion Entradas Total X Dia
     getEntradasVendidas();
 
@@ -533,13 +525,65 @@ document.addEventListener("DOMContentLoaded", function(){
     getProductosMasVendidos();
 
     // --- KPIS
-    //TOTAL ENTRADAS VENDIDAS
     getKPIsDashboard();
+}
+
+// Función para limpiar gráficos existentes (evita duplicados)
+function clearExistingCharts() {
+    console.log("Limpiando gráficos existentes...");
+    // Destruir gráficos existentes si los hay
+    const chartElements = ['chartEntradasDia', 'chartPromedioSalas', 'chartFranjaHoraria', 'chartProductosTop'];
     
+    chartElements.forEach(elementId => {
+        const element = document.getElementById(elementId);
+        if (element) {
+            // Verificar si tiene gráfico de Chart.js
+            if (element.chart) {
+                console.log(`Destruyendo gráfico existente: ${elementId}`);
+                element.chart.destroy();
+            }
+            // También verificar en el registro global de Chart.js
+            const chart = Chart.getChart(element);
+            if (chart) {
+                console.log(`Destruyendo gráfico global existente: ${elementId}`);
+                chart.destroy();
+            }
+        }
+    });
+}
 
-    /* NOTA: Tu HTML tiene un canvas 'grafico-ejemplo' que parece ser
-    un duplicado de 'chartEntradasDia'. Lo he ignorado para evitar
-    confusión y he usado los IDs que comentaste en tu HTML.
-    */
+// Exponer la función globalmente para que se pueda llamar desde otras páginas
+window.initDashboard = function() {
+    console.log("window.initDashboard llamada");
+    
+    // Verificar que estamos en la página correcta
+    if (!document.getElementById('chartEntradasDia')) {
+        console.log("No estamos en la página del dashboard - elemento chartEntradasDia no encontrado");
+        return;
+    }
+    
+    console.log("Elemento chartEntradasDia encontrado, inicializando dashboard...");
+    clearExistingCharts();
+    // Llamar a la función interna, no a sí misma
+    initDashboardInternal();
+};
 
+// Para la carga inicial de la página
+document.addEventListener("DOMContentLoaded", function(){
+    // Solo ejecutar si estamos en la página del dashboard
+    if (document.getElementById('chartEntradasDia')) {
+        initDashboardInternal();
+    }
+});
+
+// También escuchar eventos de navegación si usas un router específico
+document.addEventListener('pageChanged', function(event) {
+    if (event.detail && event.detail.page === 'dashboard') {
+        setTimeout(() => {
+            if (document.getElementById('chartEntradasDia')) {
+                clearExistingCharts();
+                initDashboardInternal();
+            }
+        }, 100);
+    }
 });
