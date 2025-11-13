@@ -727,6 +727,15 @@ function navigateTo(page) {
     }else if (page === 'inicio') {
         // Configurar visibilidad de botones en el home según el rol
         setTimeout(setupHomeButtonsVisibility, 100); // Pequeño delay para asegurar que el DOM esté actualizado
+    } else if (page === 'dashboard') {
+        setTimeout(() => {
+            if (typeof window.initDashboard === 'function') {
+                console.log('Llamando a window.initDashboard desde navigation.js');
+                window.initDashboard();
+            } else {
+                console.error('window.initDashboard no está disponible');
+            }
+        }, 100);
     }
     
     // Configurar listeners para la página de Empleados
