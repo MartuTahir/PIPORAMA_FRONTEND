@@ -525,11 +525,12 @@ body.light-mode .btn-theme::before {
 
 /* ----------------------------------Seccion Clientes--------------------------------- */
 /* Contenedor */
-.main-clientes {
+.main-clientes , .main-empleados {
     margin: 0 auto;
     max-width: 1400px;
     padding: 1rem 2rem;
 }
+
 /* Título  */
 h2 {
     color: var(--color-text);

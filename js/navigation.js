@@ -616,7 +616,7 @@ dashboard : `
         <div class="col-sm-6 p-4">
             <div class="card card-dashboard">
                 <div class="card-header header-dashboard">
-                    <h5 class="card-title fw-bold mt-2">KPis para tarjetas del dashboard</h5>
+                    <h5 class="card-title fw-bold mt-2">KPis para Piporama</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
