@@ -1,4 +1,4 @@
-const apiBase = "https://localhost:7169/api";
+const apiBase = "https://localhost:9190/api";
 let token = null;
 
 const usernameInput = document.getElementById("username");
@@ -185,17 +185,19 @@ async function handleLogin() {
     } finally {
         setLoading(false);
     }
+
 }
 
-// Event listeners
-btnLogin.addEventListener("click", handleLogin);
+if (loginForm) {
+    // Event listeners
+    btnLogin.addEventListener("click", handleLogin);
 
-// Permitir login con Enter
-loginForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    handleLogin();
-});
+    // Permitir login con Enter
+    loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        handleLogin();
+    });
 
-// Limpiar mensaje al escribir en los campos
-usernameInput.addEventListener("input", hideMessage);
-passwordInput.addEventListener("input", hideMessage);
+    usernameInput.addEventListener("input", hideMessage);
+    passwordInput.addEventListener("input", hideMessage);
+}

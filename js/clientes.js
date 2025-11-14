@@ -7,7 +7,7 @@ async function cargarClientes() {
         tabla.innerHTML = '<tr><td colspan="5" class="text-center">Cargando clientes...</td></tr>';//Texto por defecto
 
         try {
-            const url = 'https://localhost:7169/api/Clients';
+            const url = 'https://localhost:9190/api/Clients';
             const response = await fetch(url);
             if (!response.ok){
                 throw new Error(`Error: ${response.status} - No se pudo conectar a la API`);
@@ -82,7 +82,7 @@ async function buscarClientePorDNI(dni) {
         tabla.innerHTML = '<tr><td colspan="5" class="text-center">Buscando cliente...</td></tr>';
 
         try {
-            const url = `https://localhost:7169/api/Clients/${dni}`;
+            const url = `https://localhost:9190/api/Clients/${dni}`;
             const response = await fetch(url);
             if (!response.ok){
                 throw new Error(`No se encontró el cliente con DNI ${dni}`);
@@ -262,7 +262,7 @@ async function eliminarCliente(codigo, dni, nombre) {
         
         if (result.isConfirmed) {//Si tocas que si, se conecta con la api y hace el Delete (que en realidad es una baja logica pero bueno llamemosle delete)
             try {
-                const url = `https://localhost:7169/api/Clients/${codigo}`;
+                const url = `https://localhost:9190/api/Clients/${codigo}`;
                 
                 const response = await fetch(url, {
                     method: 'DELETE',
@@ -318,7 +318,7 @@ async function darClienteDeAlta(codigo, dni, nombre) {
         
         if (result.isConfirmed) {
             try {
-                const url = `https://localhost:7169/api/Clients/${codigo}`;
+                const url = `https://localhost:9190/api/Clients/${codigo}`;
                 const response = await fetch(url, {
                     method: 'PUT', 
                     headers: {
@@ -355,7 +355,7 @@ async function darClienteDeAlta(codigo, dni, nombre) {
 
 
 async function cargarDatosClienteParaEdicion(dni) {
-    const url = `https://localhost:7169/api/Clients/${dni}`;
+    const url = `https://localhost:9190/api/Clients/${dni}`;
     try{
         const response = await fetch(url);
         if(!response.ok){
@@ -399,7 +399,7 @@ async function setupFormClienteListeners() {
     if (formAgregarCliente && !formAgregarCliente.dataset.listenerAgregado) {
         
         // Carga de combos
-        const urlBase = 'https://localhost:7169/api/Additionals/'; 
+        const urlBase = 'https://localhost:9190/api/Additionals/'; 
         const promesasCombos = [   //Arreglo de promesas para cargar los combos
             //Se utiliza la funcion cargar combos, con parametros personalizads en cada combo
             cargarCombos(`${urlBase}Barrios`, 'cliente-barrio', 'idBarrio', 'descripcion', 'Seleccione un barrio...'),
@@ -513,7 +513,7 @@ async function setupFormClienteListeners() {
                 };
                 
                 try{
-                    const url = `https://localhost:7169/editar/${codigo}`;
+                    const url = `https://localhost:9190/editar/${codigo}`;
                     const response = await fetch(url, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
@@ -553,7 +553,7 @@ async function setupFormClienteListeners() {
                 };
                 
                 try{
-                    const url = 'https://localhost:7169/api/Clients';
+                    const url = 'https://localhost:9190/api/Clients';
                     const response = await fetch(url, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -588,7 +588,7 @@ async function setupFormClienteListeners() {
 
         formAgregarCliente.reset();
         
-        const urlBase = 'https://localhost:7169/api/Additionals/'; 
+        const urlBase = 'https://localhost:9190/api/Additionals/'; 
         const promesasCombos = [   
             cargarCombos(`${urlBase}Barrios`, 'cliente-barrio', 'idBarrio', 'descripcion', 'Seleccione un barrio...'),
             cargarCombos(`${urlBase}Tipos-Cliente`, 'cliente-tipo', 'idTipoCliente', 'tipoCliente', 'Seleccione un tipo de cliente...'),
@@ -650,3 +650,4 @@ async function cargarCombos(url, selectId, valorCampo, textoCampo, textoDefault 
         select.disabled = false;
     }
 }
+

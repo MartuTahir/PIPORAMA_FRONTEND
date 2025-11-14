@@ -310,362 +310,462 @@ const sections = {
             </form>
     </main>
     `,
-facturas : `
-<main class="container-fluid py-4 px-4 main-clientes">
-            <h2 class="mb-4 fw-bold">Administración de Facturas</h2>
+    facturas : `
+    <main class="container-fluid py-4 px-4 main-clientes">
+                <h2 class="mb-4 fw-bold">Administración de Facturas</h2>
 
-            <div class="row mb-4">
-            <div class="col-lg-6">
-                <div class="d-flex">
-                <div class="input-group me-2">
-                    <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control"  placeholder="Buscar por nro de factura..." id="buscar-factura">
+                <div class="row mb-4">
+                <div class="col-lg-6">
+                    <div class="d-flex">
+                    <div class="input-group me-2">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control"  placeholder="Buscar por nro de factura..." id="buscar-factura">
+                    </div>
+                    <button class="btn btn-primary d-flex align-items-center" type="button" id="boton-buscar-f">
+                        <i class="bi bi-search me-2"></i>Buscar
+                    </button>
+                    </div>
                 </div>
-                <button class="btn btn-primary d-flex align-items-center" type="button" id="boton-buscar-f">
-                    <i class="bi bi-search me-2"></i>Buscar
-                </button>
+                <div class="col-lg-6 text-lg-end mt-3 mt-lg-0">
+                    <a href="#formFactura" class="btn btn-primary" id="boton-agregar-factura">
+                    <i class="bi bi-person-plus-fill me-2"></i>
+                    Agregar Factura
+                    </a>
+                </div>
+                </div>
+
+                <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID Factura</th>
+                        <th scope="col">DNI cliente</th>
+                        <th scope="col">DNI empleado</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Método de pago</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Forma de compra</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tabla-facturas-body">
+                    <tr><td colspan="8" class="text-center">Cargando...</td></tr>
+                    </tbody>
+                </table>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                <div class="text-result" id="total-facturas">
+                    Mostrando 0 de 0 resultados
+                </div>
+                <nav aria-label="Paginación de facturas">
+                    <ul class="pagination pagination-dark mb-0">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                    <li class="page-item"><a class="page-link" href="#">10</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Siguiente</a>
+                    </li>
+                    </ul>
+                </nav>
+                </div>
+            </main> 
+    `,
+    formFactura: `
+        <main class="main-content p-4">
+        <h1 class="mb-4 fw-bold" id="form-factura-titulo">Agregar Nueva Factura</h1>
+        <p class="lead">Completá todos los campos para registrar una nueva factura.</p>
+        <hr>
+        <form id="form-agregar-factura" class="col-lg-10">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3"><label for="factura-dni-cliente" class="form-label">DNI del Cliente</label><select class="form-select" id="factura-dni-cliente"><option value="">Cargando clientes...</option></select></div>
+                    <div class="mb-3"><label for="factura-dni-empleado" class="form-label">Empleado</label><select class="form-select" id="factura-dni-empleado"><option value="">Cargando empleados...</option></select></div>
+                    <div class="mb-3"><label for="factura-fecha" class="form-label">Fecha</label><input type="date" class="form-control" id="factura-fecha"></div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3"><label for="factura-metodo-pago" class="form-label">Método de Pago</label><select class="form-select" id="factura-metodo-pago"><option value="">Cargando...</option></select></div>
+                    <div class="mb-3"><label for="factura-estado" class="form-label">Estado</label><select class="form-select" id="factura-estado"><option value="">Cargando...</option></select></div>
+                    <div class="mb-3"><label for="factura-forma-compra" class="form-label">Forma de Compra</label><select class="form-select" id="factura-forma-compra"><option value="">Cargando...</option></select></div>
                 </div>
             </div>
-            <div class="col-lg-6 text-lg-end mt-3 mt-lg-0">
-                <a href="#formFactura" class="btn btn-primary" id="boton-agregar-factura">
-                <i class="bi bi-person-plus-fill me-2"></i>
-                Agregar Factura
+
+            <hr class="my-4">
+            <h5 class="mb-3">Detalles de la Factura</h5>
+            <div class="p-3 mb-3" style="background-color: var(--color-surface); border-radius: var(--radius);">
+                
+                <div class="mb-3">
+                    <label for="detalle-tipo-item" class="form-label fw-bold">1. Seleccione el tipo de ítem</label>
+                    <select class="form-select" id="detalle-tipo-item">
+                        <option value="" selected>Seleccione un tipo...</option>
+                        <option value="ticket">Ticket (Entrada)</option>
+                        <option value="consumible">Consumible</option>
+                        <option value="combo">Combo</option>
+                    </select>
+                </div>
+
+                <div id="formularios-detalle">
+                    
+                    <div id="form-seccion-ticket" class="detalle-seccion" style="display: none;">
+                        <h6 class="text-info">Datos del Ticket</h6>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="ticket-funcion" class="form-label">Función</label>
+                                <select class="form-select" id="ticket-funcion"><option value="">Cargando funciones...</option></select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="ticket-asiento" class="form-label">Asiento</label>
+                                <select class="form-select" id="ticket-asiento" disabled><option value="">Seleccione función...</option></select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="ticket-precio" class="form-label">Precio ($)</label>
+                                <input type="number" step="0.01" class="form-control" id="ticket-precio" readonly placeholder="0.00">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="form-seccion-consumible" class="detalle-seccion" style="display: none;">
+                        <h6 class="text-info">Datos del Consumible</h6>
+                        <div class="row">
+                            <div class="col-md-8 mb-3"><label for="consumible-descripcion" class="form-label">Descripción</label><select class="form-select" id="consumible-descripcion"><option value="">Cargando...</option></select></div>
+                            <div class="col-md-4 mb-3"><label for="consumible-precio" class="form-label">Precio ($)</label><input type="number" step="0.01" class="form-control" id="consumible-precio" readonly placeholder="0.00"></div>
+                        </div>
+                    </div>
+
+                    <div id="form-seccion-combo" class="detalle-seccion" style="display: none;">
+                        <h6 class="text-info">Datos del Combo</h6>
+                        <div class="row">
+                            <div class="col-md-8 mb-3"><label for="combo-descripcion" class="form-label">Descripción</label><select class="form-select" id="combo-descripcion"><option value="">Cargando...</option></select></div>
+                            <div class="col-md-4 mb-3"><label for="combo-precio" class="form-label">Precio ($)</label><input type="number" step="0.01" class="form-control" id="combo-precio" readonly placeholder="0.00"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row align-items-end mt-3">
+                    <div class="col-md-9">
+                        <label for="detalle-promocion" class="form-label">2. Aplicar Promoción (Opcional)</label>
+                        <select class="form-select" id="detalle-promocion"><option value="" selected>Sin promoción...</option></select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-primary w-100" id="btn-agregar-item">
+                            <i class="bi bi-plus-circle me-2"></i>Agregar Ítem
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <h6 class="mb-2">Ítems a Facturar</h6>
+            <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
+            <table class="table table-dark table-sm">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                            <th>Detalles</th>
+                            <th>Promoción</th>
+                            <th>Precio Final</th>
+                            <th class="text-center" style="width: 50px;">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-detalles-body">
+                        <tr><td colspan="6" class="text-center text-muted">Aún no hay ítems...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <hr class="my-4">
+            <h5 class="mb-3">Información Adicional</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="factura-total" class="form-label">Total ($)</label>
+                                            <input type="number" class="form-control" id="factura-total" readonly placeholder="0.00">
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-success btn-m" id="btn-submit-factura">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    Guardar Factura
+                </button>
+                <a href="#facturas" class="btn btn-secondary btn-m" onclick="navigateTo('facturas'); return false;">
+                    <i class="bi bi-arrow-left me-2"></i>
+                    Volver a Facturas
                 </a>
             </div>
-            </div>
-
-            <div class="table-responsive">
-            <table class="table table-dark table-hover align-middle">
-                <thead>
-                <tr>
-                    <th scope="col">ID Factura</th>
-                    <th scope="col">DNI cliente</th>
-                    <th scope="col">DNI empleado</th>
-                    <th scope="col">Fecha</th>
-                    <th scope="col">Método de pago</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Forma de compra</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-                </thead>
-                <tbody id="tabla-facturas-body">
-                <tr><td colspan="8" class="text-center">Cargando...</td></tr>
-                </tbody>
-            </table>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center mt-4">
-            <div class="text-result" id="total-facturas">
-                Mostrando 0 de 0 resultados
-            </div>
-            <nav aria-label="Paginación de facturas">
-                <ul class="pagination pagination-dark mb-0">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
-                </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-                <li class="page-item"><a class="page-link" href="#">10</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Siguiente</a>
-                </li>
-                </ul>
-            </nav>
-            </div>
-        </main> 
-`,
-
-// ... (tus otras secciones como 'inicio', 'clientes', etc.) ...
-
-formFactura: ` <main class="main-content p-4">
-    <h1 class="mb-4 fw-bold" id="form-factura-titulo">Agregar Nueva Factura</h1>
-    <p class="lead">Completá todos los campos para registrar una nueva factura.</p>
-    <hr>
-    <form id="form-agregar-factura" class="col-lg-10">
+            </form>
+    </main>
+    `,
+    dashboard : `
         <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3"><label for="factura-dni-cliente" class="form-label">DNI del Cliente</label><select class="form-select" id="factura-dni-cliente"><option value="">Cargando clientes...</option></select></div>
-                <div class="mb-3"><label for="factura-dni-empleado" class="form-label">Empleado</label><select class="form-select" id="factura-dni-empleado"><option value="">Cargando empleados...</option></select></div>
-                <div class="mb-3"><label for="factura-fecha" class="form-label">Fecha</label><input type="date" class="form-control" id="factura-fecha"></div>
-            </div>
-            <div class="col-md-6">
-                <div class="mb-3"><label for="factura-metodo-pago" class="form-label">Método de Pago</label><select class="form-select" id="factura-metodo-pago"><option value="">Cargando...</option></select></div>
-                <div class="mb-3"><label for="factura-estado" class="form-label">Estado</label><select class="form-select" id="factura-estado"><option value="">Cargando...</option></select></div>
-                <div class="mb-3"><label for="factura-forma-compra" class="form-label">Forma de Compra</label><select class="form-select" id="factura-forma-compra"><option value="">Cargando...</option></select></div>
-            </div>
-        </div>
+            <div class="col-sm-6 mb-3 p-4">
 
-        <hr class="my-4">
-        <h5 class="mb-3">Detalles de la Factura</h5>
-        <div class="p-3 mb-3" style="background-color: var(--color-surface); border-radius: var(--radius);">
-            
-            <div class="mb-3">
-                <label for="detalle-tipo-item" class="form-label fw-bold">1. Seleccione el tipo de ítem</label>
-                <select class="form-select" id="detalle-tipo-item">
-                    <option value="" selected>Seleccione un tipo...</option>
-                    <option value="ticket">Ticket (Entrada)</option>
-                    <option value="consumible">Consumible</option>
-                    <option value="combo">Combo</option>
-                </select>
-            </div>
+            <!-- Tarjeta Rendimiento General / Movimientos por dia / Filtros Fecha  -->
+                <div class="card card-dashboard">
+                    <div class="card-header header-dashboard">
+                        <h5 class="card-title fw-bold mt-2">Rendimiento general</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text fw-bold fs-6 mb-3">Movimientos por dia</p>
+                        <div class="filtro-fecha-mov">
+                            <div class="row g-2 align-items-end mb-3">
+                                <div class="col-md-4">
+                                    <label for="filtroFechaDesde" class="form-label fw-semibold small">Desde</label>
+                                    <input type="date" id="filtroFechaDesde" class="form-control">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="filtroFechaHasta" class="form-label fw-semibold small">Hasta</label>
+                                    <input type="date" id="filtroFechaHasta" class="form-control">
+                                </div>
+                                <div class="col-md-4">
+                                    <button id="btnAplicarFiltro" class="btn btn-primary w-100">Filtrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <canvas id="chartEntradasDia"></canvas>
 
-            <div id="formularios-detalle">
-                
-                <div id="form-seccion-ticket" class="detalle-seccion" style="display: none;">
-                    <h6 class="text-info">Datos del Ticket</h6>
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label for="ticket-funcion" class="form-label">Función</label>
-                            <select class="form-select" id="ticket-funcion"><option value="">Cargando funciones...</option></select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="ticket-asiento" class="form-label">Asiento</label>
-                            <select class="form-select" id="ticket-asiento" disabled><option value="">Seleccione función...</option></select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="ticket-precio" class="form-label">Precio ($)</label>
-                            <input type="number" step="0.01" class="form-control" id="ticket-precio" readonly placeholder="0.00">
+                        <div class="stats d-flex justify-content-between m-4">
+                            <div>
+                                <p class="fs-6">Entradas vendidas</p>
+                                <span id="totalEntradas" class="fw-bold"></span>
+                            </div>
+                            <div>
+                                <p class="fs-6">Recaudación total</p>
+                                <span id="totalRecaudacion" class="fw-bold"></span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div id="form-seccion-consumible" class="detalle-seccion" style="display: none;">
-                    <h6 class="text-info">Datos del Consumible</h6>
-                    <div class="row">
-                        <div class="col-md-8 mb-3"><label for="consumible-descripcion" class="form-label">Descripción</label><select class="form-select" id="consumible-descripcion"><option value="">Cargando...</option></select></div>
-                        <div class="col-md-4 mb-3"><label for="consumible-precio" class="form-label">Precio ($)</label><input type="number" step="0.01" class="form-control" id="consumible-precio" readonly placeholder="0.00"></div>
-                    </div>
-                </div>
 
-                <div id="form-seccion-combo" class="detalle-seccion" style="display: none;">
-                    <h6 class="text-info">Datos del Combo</h6>
-                    <div class="row">
-                        <div class="col-md-8 mb-3"><label for="combo-descripcion" class="form-label">Descripción</label><select class="form-select" id="combo-descripcion"><option value="">Cargando...</option></select></div>
-                        <div class="col-md-4 mb-3"><label for="combo-precio" class="form-label">Precio ($)</label><input type="number" step="0.01" class="form-control" id="combo-precio" readonly placeholder="0.00"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row align-items-end mt-3">
-                <div class="col-md-9">
-                    <label for="detalle-promocion" class="form-label">2. Aplicar Promoción (Opcional)</label>
-                    <select class="form-select" id="detalle-promocion"><option value="" selected>Sin promoción...</option></select>
-                </div>
-                <div class="col-md-3">
-                    <button type="button" class="btn btn-primary w-100" id="btn-agregar-item">
-                        <i class="bi bi-plus-circle me-2"></i>Agregar Ítem
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <h6 class="mb-2">Ítems a Facturar</h6>
-        <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
-        <table class="table table-dark table-sm">
-                <thead>
-                    <tr>
-                        <th>Tipo</th>
-                        <th>Descripción</th>
-                        <th>Detalles</th>
-                        <th>Promoción</th>
-                        <th>Precio Final</th>
-                        <th class="text-center" style="width: 50px;">Acción</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-detalles-body">
-                    <tr><td colspan="6" class="text-center text-muted">Aún no hay ítems...</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <hr class="my-4">
-        <h5 class="mb-3">Información Adicional</h5>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="factura-total" class="form-label">Total ($)</label>
-                                        <input type="number" class="form-control" id="factura-total" readonly placeholder="0.00">
-                </div>
-            </div>
-            
-        </div>
-
-        <div class="d-flex gap-2 mt-4">
-            <button type="submit" class="btn btn-success btn-m" id="btn-submit-factura">
-                <i class="bi bi-check-circle-fill me-2"></i>
-                Guardar Factura
-            </button>
-            <a href="#facturas" class="btn btn-secondary btn-m" onclick="navigateTo('facturas'); return false;">
-                <i class="bi bi-arrow-left me-2"></i>
-                Volver a Facturas
-            </a>
-        </div>
-        </form>
-</main>
-`,
-dashboard : `
-    <div class="row">
-        <div class="col-sm-6 mb-3 p-4">
-            <div class="card card-dashboard">
-                <div class="card-header header-dashboard">
-                    <h5 class="card-title fw-bold mt-2">Rendimiento general</h5>
-                </div>
-                <div class="card-body">
-                    <p class="card-text fw-bold fs-6">Movimientos por dia</p>
-                    <!-- Gráfico de líneas -->
-                    <!-- Gráfico con id="chartEntradasDia" -->
-                    <canvas id="chartEntradasDia"></canvas>
-
-                    <div class="stats d-flex justify-content-between m-4">
-                        <div>
-                            <p class="fs-6">Entradas vendidas</p>
-                            <span id="totalEntradas" class="fw-bold"></span>
-                        </div>
-                        <div>
-                            <p class="fs-6">Recaudación total</p>
-                            <span id="totalRecaudacion" class="fw-bold"></span>
-                        </div>
-                    </div>
-                </div>
+            <!-- Promedio de entradas vendidas por función -->
                 <div class="card-body border-top">
-                    <p class="card-text fw-bold fs-6">Promedio de entradas vendidas por función</p>
-                    <!-- Gráfico de barras horizontales con id="chartPromedioSalas"-->
+                    <p class="card-text fw-bold fs-6 mb-3">Promedio de entradas vendidas por función</p>
+                    <div class="filtro-fecha-prom">
+                        <div class="row g-2 align-items-end mb-3">
+
+                            <div class="col-md-4">
+                                <label for="filtroFechaDesde_Prom" class="form-label fw-semibold small">Desde</label>
+                                <input type="date" id="filtroFechaDesde_Prom" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="filtroFechaHasta_Prom" class="form-label fw-semibold small">Hasta</label>
+                                <input type="date" id="filtroFechaHasta_Prom" class="form-control">
+                            </div>
+
+                            <div class="col-md-4">
+                                <button id="btnAplicarFiltro_Prom" class="btn btn-primary w-100">Filtrar Promedio</button>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <canvas id="chartPromedioSalas"></canvas>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 p-4">
-            <div class="card card-dashboard">
-            <div class="card-header header-dashboard">
-                <h5 class="card-title fw-bold mt-2">Operaciones y horarios</h5>
-            </div>
-            <div class="card-body">
-                <p class="fs-6 fw-bold">Cantidad de funciones por franja horaria</p>
-                <!--  Gráfico estilo velas -->
-                <canvas id="chartFranjaHoraria"></canvas>
-            </div>
-            <div class="card-body border-top">
-                <p class="fs-6 fw-bold">Próximas funciones</p>
 
-                <div id="funcionesGrid" class="funciones-grid row"></div>
-                <div id="funcionesMsg"></div>
-            </div>
-            </div>
-        </div>
+            <!-- Cantidad funciones Franja Horaria -->
+                <div class="col-sm-6 p-4">
+                    <div class="card card-dashboard">
+                        <div class="card-header header-dashboard">
+                            <h5 class="card-title fw-bold mt-2">Operaciones y horarios</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="fs-6 fw-bold">Cantidad de funciones por franja horaria</p>
+                            <!--  Gráfico estilo velas -->
+                            <canvas id="chartFranjaHoraria"></canvas>
+                        </div>
+                        <div class="card-body border-top">
+                            <p class="fs-6 fw-bold">Próximas funciones</p>
 
-        <div class="col-sm-6 p-4">
-            <div class="card card-dashboard">
-            <div class="card-header header-dashboard">
-                <h5 class="card-title fw-bold mt-2">Clientes frecuentes</h5>
-            </div>
-            <div class="card-body">
-                <table class="table table-dashboard">
-                    <thead>
-                        <tr>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Apellido</th>
-                            <th scope="col">Total de compras</th>
-                        </tr>
-                    </thead>
-                    <tbody id="clientesBody"></tbody>
-                </table>
-                <div id="clientesMsg" class="text-muted small mt-2"></div>
-            </div>
-            </div>
-        </div>
-        <div class="col-sm-6 p-4">
-            <div class="card card-dashboard">
-            <div class="card-header header-dashboard">
-                <h5 class="card-title fw-bold mt-2">Películas</h5>
-            </div>
-            <div class="card-body">
-                <!-- Películas más vistas -->
-                <div>
-                    <p class="fs-6 fw-bold">Películas más vistas</p>
-                    <ul id="peliculasLista" class="peliculas-lista">
-                        <!-- Ejemplo de item -->
-                        
-                    </ul>
-                    <div id="peliculasMsg" class="text-muted small mt-2"></div>
-                    <!-- Podría agregarse aquí si queremos compararlo visualmente -->
-                </div>
-            </div>
-            </div>
-        </div>
-        <div class="col-sm-6 p-4">
-            <div class="card card-dashboard">
-                <div class="card-header header-dashboard">
-                    <h5 class="card-title fw-bold mt-2">Confitería y combos</h5>
-                </div>
-                <div class="card-body">
-                    <p class="fs-6 fw-bold">Top 5 productos más vendidos</p>
-                    <!-- Agregarle gráfico de barras horizontales -->
-                    <canvas id="chartProductosTop"></canvas>
-                </div>
-
-                <div class="card-body border-top">
-                    <p class="fs-6 fw-bold">Recaudación total por combos</p>
-                    <div class="d-flex">
-                        <p class="fw-bold">Total recaudado: </p>
-                        <p id="recaudacionTotal" class="ms-2"></p>
+                            <div id="funcionesGrid" class="funciones-grid row"></div>
+                            <div id="funcionesMsg"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-sm-6 p-4">
-            <div class="card card-dashboard">
-                <div class="card-header header-dashboard">
-                    <h5 class="card-title fw-bold mt-2">KPis para Piporama</h5>
+
+            <!-- Clientes frecuentes -->
+                <div class="col-sm-6 p-4">
+                    <div class="card card-dashboard">
+                        <div class="card-header header-dashboard">
+                            <h5 class="card-title fw-bold mt-2">Clientes frecuentes</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-2 align-items-end mb-3">
+
+                                <div class="col-md-4">
+                                    <label for="filtroFechaDesde_Cli" class="form-label fw-semibold small">Desde</label>
+                                    <input type="date" id="filtroFechaDesde_Cli" class="form-control">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="filtroFechaHasta_Cli" class="form-label fw-semibold small">Hasta</label>
+                                    <input type="date" id="filtroFechaHasta_Cli" class="form-control">
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label for="filtroCompras_Cli" class="form-label fw-semibold small">Cantidad Compras</label>
+                                    <input type="number" id="filtroCompras_Cli" class="form-control" placeholder="Ej: 5" min="0">
+                                </div>
+
+                                <div class="col-md-2">
+                                    <button id="btnAplicarFiltro_Cli" class="btn btn-primary w-100">Filtrar</button>
+                                </div>
+                            </div>
+
+                            <table class="table table-dashboard">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Apellido</th>
+                                        <th scope="col">Total de compras</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clientesBody"></tbody>
+                            </table>
+
+                            <div id="clientesMsg" class="text-muted small mt-2"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-6 mb-3">
-                            <div>
-                                <div>
-                                    <i class="bi bi-ticket-perforated-fill kpi-icon"></i>
-                                    <i class="bi bi-arrow-up-circle kpi-icon"></i>
-                                </div>
-                                <h6>Total de entradas vendidas</h6>
-                                <span class="fs-4 fw-bold" id="total-entradas-vendidas"></span>
-                            </div>
+
+            <!-- Películas más vistas / fecha y ingresos -->
+                <div class="col-sm-6 p-4">
+                    <div class="card card-dashboard">
+                        <div class="card-header header-dashboard">
+                            <h5 class="card-title fw-bold mt-2">Películas</h5>
                         </div>
-                        <div class="col-6 mb-3">
+                        <div class="card-body">
                             <div>
-                                <div>
-                                    <i class="bi bi-currency-dollar kpi-icon"></i>
-                                    <i class="bi bi-arrow-up-circle kpi-icon"></i>
+                                <p class="fs-6 fw-bold">Top Películas por Ingresos</p>
+                                
+                                <div class="row g-2 align-items-end mb-3">
+                                    
+                                    <div class="col-md-3">
+                                        <label for="filtroFechaDesde_Pel" class="form-label fw-semibold small">Desde</label>
+                                        <input type="date" id="filtroFechaDesde_Pel" class="form-control">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="filtroFechaHasta_Pel" class="form-label fw-semibold small">Hasta</label>
+                                        <input type="date" id="filtroFechaHasta_Pel" class="form-control">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="filtroRecaudado_Pel" class="form-label fw-semibold small">Recaudado en $</label>
+                                        <input type="number" id="filtroRecaudado_Pel" class="form-control" placeholder="Ej: $10000" min="0">
+                                    </div>
+
+                                    <!-- Botón Único -->
+                                    <div class="col-md-3">
+                                        <button id="btnAplicarFiltro_Pel" class="btn btn-primary w-100">Filtrar</button>
+                                    </div>
                                 </div>
-                                <h6>Recaudación total</h6>
-                                <span class="fs-4 fw-bold" id="recaudacion-total"></span>
-                            </div>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <div>
-                                <div>
-                                    <i class="bi bi-film kpi-icon"></i>
-                                    <i class="bi bi-arrow-up-circle kpi-icon"></i>
-                                </div>
-                                <h6>Películas activas</h6>
-                                <span class="fs-4 fw-bold" id="peliculas-activas"></span>
-                            </div>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <div>
-                                <div>
-                                    <i class="bi bi-grid-3x3 kpi-icon"></i>
-                                    <i class="bi bi-arrow-up-circle kpi-icon"></i>
-                                </div>
-                                <h6>Clientes registrados</h6>
-                                <span class="fs-4 fw-bold" id="clientes-registrados"></span>
+                                <!-- --- FIN DE LOS FILTROS --- -->
+
+                                <!-- Tu lista (aquí pondremos los iconos de dinero con JS) -->
+                                <ul id="peliculasLista" class="peliculas-lista"></ul>
+                                <div id="peliculasMsg" class="text-muted small mt-2"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+
+            <!-- Confitería y combos -->
+                <div class="col-sm-6 p-4">
+                    <div class="card card-dashboard">
+                        <div class="card-header header-dashboard">
+                            <h5 class="card-title fw-bold mt-2">Confitería y combos</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="fs-6 fw-bold">Top 5 productos más vendidos</p>
+                            <div class="row g-2 align-items-end mb-3">
+
+                                <div class="col-md-5">
+                                    <label for="filtroFechaDesde_Prod" class="form-label fw-semibold small">Desde</label>
+                                    <!-- ID Nuevo -->
+                                    <input type="date" id="filtroFechaDesde_Prod" class="form-control">
+                                </div>
+                                <div class="col-md-5">
+                                    <label for="filtroFechaHasta_Prod" class="form-label fw-semibold small">Hasta</label>
+                                    <input type="date" id="filtroFechaHasta_Prod" class="form-control">
+                                </div>
+
+                                <div class="col-md-2">
+                                    <button id="btnAplicarFiltro_Prod" class="btn btn-primary w-100">Filtrar</button>
+                                </div>
+                            </div>
+
+                            <canvas id="chartProductosTop"></canvas>
+                        </div>
+
+                        <div class="card-body border-top">
+                            <p class="fs-6 fw-bold">Recaudación total por combos</p>
+                            <div class="d-flex">
+                                <p class="fw-bold">Total recaudado: </p>
+                                <p id="recaudacionTotal" class="ms-2"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- KPis para Piporama -->
+                <div class="col-sm-6 p-4">
+                    <div class="card card-dashboard">
+                        <div class="card-header header-dashboard">
+                            <h5 class="card-title fw-bold mt-2">KPis para Piporama</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <div>
+                                        <div>
+                                            <i class="bi bi-ticket-perforated-fill kpi-icon"></i>
+                                            <i class="bi bi-arrow-up-circle kpi-icon"></i>
+                                        </div>
+                                        <h6>Total de entradas vendidas</h6>
+                                        <span class="fs-4 fw-bold" id="total-entradas-vendidas"></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <div>
+                                        <div>
+                                            <i class="bi bi-currency-dollar kpi-icon"></i>
+                                            <i class="bi bi-arrow-up-circle kpi-icon"></i>
+                                        </div>
+                                        <h6>Recaudación total</h6>
+                                        <span class="fs-4 fw-bold" id="recaudacion-total"></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <div>
+                                        <div>
+                                            <i class="bi bi-film kpi-icon"></i>
+                                            <i class="bi bi-arrow-up-circle kpi-icon"></i>
+                                        </div>
+                                        <h6>Películas activas</h6>
+                                        <span class="fs-4 fw-bold" id="peliculas-activas"></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <div>
+                                        <div>
+                                            <i class="bi bi-grid-3x3 kpi-icon"></i>
+                                            <i class="bi bi-arrow-up-circle kpi-icon"></i>
+                                        </div>
+                                        <h6>Clientes registrados</h6>
+                                        <span class="fs-4 fw-bold" id="clientes-registrados"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </div>
-    </div>
-`
+    `
 }
 
 // Función para navegar entre páginas
@@ -852,6 +952,15 @@ function setupHomeButtonsVisibility() {
     }
 }
 
-// Hacer las funciones disponibles globalmente
-window.navigateTo = navigateTo;
-window.setupHomeButtonsVisibility = setupHomeButtonsVisibility;
+window.minions = function() {
+    Swal.fire({
+        title: '¡BANANA!',
+        html: '<img src="https://media.giphy.com/media/hjvBoWTABwwNi/giphy.gif" alt="Minion" style="width: 100%;">',
+        width: 600,
+        padding: '1em',
+        background: '#1e1d2c', // Tu color de fondo
+        color: '#ffffff',      // Tu color de texto
+        showConfirmButton: false, // Ocultamos el botón "OK"
+        showCloseButton: true     // Mostramos una 'X' para cerrar
+    });
+}
