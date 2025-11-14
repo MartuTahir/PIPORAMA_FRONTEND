@@ -441,7 +441,10 @@ async function getFuncionesXHorario(){
 
         const ctxFranjaHoraria = document.getElementById('chartFranjaHoraria');
         if (ctxFranjaHoraria) {
-            new Chart(ctxFranjaHoraria, {
+            if (chartFranjaHorariaInstance) {  
+                chartFranjaHorariaInstance.destroy();
+            }
+            chartFranjaHorariaInstance = new Chart(ctxFranjaHoraria, {
                 type: 'bar',
                 data: dataHoraria,
                 options: {
