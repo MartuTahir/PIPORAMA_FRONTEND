@@ -537,15 +537,15 @@ const sections = {
                                 <span id="totalEntradas" class="fw-bold"></span>
                             </div>
                             <div>
-                                <p class="fs-6">Recaudación total</p>
+                                <p class="fs-6">Recaudación de entradas</p>
                                 <span id="totalRecaudacion" class="fw-bold"></span>
                             </div>
                         </div>
                     </div>
 
-            <!-- Promedio de entradas vendidas por función -->
+            <!-- Promedio de entradas vendidas por sala -->
                 <div class="card-body border-top">
-                    <p class="card-text fw-bold fs-6 mb-3">Promedio de entradas vendidas por función</p>
+                    <p class="card-text fw-bold fs-6 mb-3">Promedio de entradas vendidas por sala</p>
                     <div class="filtro-fecha-prom">
                         <div class="row g-2 align-items-end mb-3">
 
@@ -589,11 +589,11 @@ const sections = {
                     </div>
                 </div>
 
-            <!-- Clientes frecuentes -->
+            <!-- Clientes con mayor cantidad de compras -->
                 <div class="col-sm-6 p-4">
                     <div class="card card-dashboard">
                         <div class="card-header header-dashboard">
-                            <h5 class="card-title fw-bold mt-2">Clientes frecuentes</h5>
+                            <h5 class="card-title fw-bold mt-2">Clientes con mayor cantidad de compras</h5>
                         </div>
                         <div class="card-body">
                             <div class="row g-2 align-items-end mb-3">
@@ -608,7 +608,7 @@ const sections = {
                                 </div>
 
                                 <div class="col-md-2">
-                                    <label for="filtroCompras_Cli" class="form-label fw-semibold small">Cantidad Compras</label>
+                                    <label for="filtroCompras_Cli" class="form-label fw-semibold small">Cantidad mínima</label>
                                     <input type="number" id="filtroCompras_Cli" class="form-control" placeholder="Ej: 5" min="0">
                                 </div>
 
@@ -674,14 +674,14 @@ const sections = {
                     </div>
                 </div>
 
-            <!-- Confitería y combos -->
+            <!-- Confitería -->
                 <div class="col-sm-6 p-4">
                     <div class="card card-dashboard">
                         <div class="card-header header-dashboard">
-                            <h5 class="card-title fw-bold mt-2">Confitería y combos</h5>
+                            <h5 class="card-title fw-bold mt-2">Confitería</h5>
                         </div>
                         <div class="card-body">
-                            <p class="fs-6 fw-bold">Top 5 productos más vendidos</p>
+                            <p class="fs-6 fw-bold">Top 5 consumibles más vendidos</p>
                             <div class="row g-2 align-items-end mb-3">
 
                                 <div class="col-md-5">
@@ -703,7 +703,7 @@ const sections = {
                         </div>
 
                         <div class="card-body border-top">
-                            <p class="fs-6 fw-bold">Recaudación total por combos</p>
+                            <p class="fs-6 fw-bold">Recaudación total de consumibles</p>
                             <div class="d-flex">
                                 <p class="fw-bold">Total recaudado: </p>
                                 <p id="recaudacionTotal" class="ms-2"></p>
@@ -736,7 +736,7 @@ const sections = {
                                             <i class="bi bi-currency-dollar kpi-icon"></i>
                                             <i class="bi bi-arrow-up-circle kpi-icon"></i>
                                         </div>
-                                        <h6>Recaudación total</h6>
+                                        <h6>Recaudación general</h6>
                                         <span class="fs-4 fw-bold" id="recaudacion-total"></span>
                                     </div>
                                 </div>
@@ -952,15 +952,15 @@ function setupHomeButtonsVisibility() {
     }
 }
 
-window.minions = function() {
-    Swal.fire({
-        title: '¡BANANA!',
-        html: '<img src="https://media.giphy.com/media/hjvBoWTABwwNi/giphy.gif" alt="Minion" style="width: 100%;">',
-        width: 600,
-        padding: '1em',
-        background: '#1e1d2c', // Tu color de fondo
-        color: '#ffffff',      // Tu color de texto
-        showConfirmButton: false, // Ocultamos el botón "OK"
-        showCloseButton: true     // Mostramos una 'X' para cerrar
-    });
-}
+// window.minions = function() {
+//     Swal.fire({
+//         title: '¡BANANA!',
+//         html: '<img src="https://media.giphy.com/media/hjvBoWTABwwNi/giphy.gif" alt="Minion" style="width: 100%;">',
+//         width: 600,
+//         padding: '1em',
+//         background: '#1e1d2c', // Tu color de fondo
+//         color: '#ffffff',      // Tu color de texto
+//         showConfirmButton: false, // Ocultamos el botón "OK"
+//         showCloseButton: true     // Mostramos una 'X' para cerrar
+//     });
+// }
