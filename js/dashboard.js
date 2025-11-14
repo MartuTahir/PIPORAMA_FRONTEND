@@ -658,11 +658,11 @@ async function fetchPeliculas(fechaDesde = null, fechaHasta = null, recaudado = 
     const params = new URLSearchParams();
 
     if (fechaDesde && fechaHasta) {
-        params.append('filtroFechaDesde_Pel', fechaDesde);
-        params.append('filtroFechaHasta_Pel', fechaHasta);
+        params.append('fechaInicio', fechaDesde);
+        params.append('fechaFin', fechaHasta);
     }
     if (recaudado) {
-        params.append('filtroRecaudado_Pel', recaudado);
+        params.append('recaudacion', recaudado);
     }
     
     const queryString = params.toString();
@@ -679,7 +679,7 @@ async function fetchPeliculas(fechaDesde = null, fechaHasta = null, recaudado = 
 async function loadPeliculas(fechaDesde = null, fechaHasta = null, recaudado = null) {
     const msg = document.getElementById('peliculasMsg');
     const ul = document.getElementById('peliculasLista');
-    clearContainer(ul);
+    clear(ul);
     msg.textContent = 'Cargando...';
 
     try {
