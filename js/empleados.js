@@ -7,7 +7,7 @@ async function cargarEmpleados() {
         tabla.innerHTML = '<tr><td colspan="5" class="text-center">Cargando empleados...</td></tr>';//Texto por defecto
 
         try {
-            const url = 'https://localhost:7169/api/Employees';
+            const url = 'https://localhost:9190/api/Employees';
             const response = await fetch(url);
             if (!response.ok){
                 throw new Error(`Error: ${response.status} - No se pudo conectar a la API`);
@@ -78,7 +78,7 @@ async function buscarEmpleadoPorDNI(dni) {
         tabla.innerHTML = '<tr><td colspan="5" class="text-center">Buscando empleados...</td></tr>';
 
         try {
-            const url = `https://localhost:7169/api/Employees/${dni}`;
+            const url = `https://localhost:9190/api/Employees/${dni}`;
             const response = await fetch(url);
             if (!response.ok){
                 throw new Error(`No se encontró el empleado con DNI ${dni}`);
@@ -260,7 +260,7 @@ async function eliminarEmpleado(codigo, dni, nombre) {
         
         if (result.isConfirmed) {//Si tocas que si, se conecta con la api y hace el Delete (que en realidad es una baja logica pero bueno llamemosle delete)
             try {
-                const url = `https://localhost:7169/api/Employees/${dni}`;
+                const url = `https://localhost:9190/api/Employees/${dni}`;
                 
                 const response = await fetch(url, {
                     method: 'DELETE',
@@ -316,7 +316,7 @@ async function darEmpleadoDeAlta(codigo, dni, nombre) {
         
         if (result.isConfirmed) {
             try {
-                const url = `https://localhost:7169/activate/${codigo}`;
+                const url = `https://localhost:9190/activate/${codigo}`;
                 const response = await fetch(url, {
                     method: 'PUT', 
                     headers: {
@@ -403,7 +403,7 @@ async function cargarCombos(url, selectId, valorCampo, textoCampo, textoDefault 
 }
 
 async function cargarDatosEmpleadosParaEdicion(dni) {
-    const url = `https://localhost:7169/api/Employees/${dni}`;
+    const url = `https://localhost:9190/api/Employees/${dni}`;
     try{
         const response = await fetch(url);
         if(!response.ok){
@@ -457,7 +457,7 @@ async function setupFormEmpleadoListeners() {
     if (formAgregarEmpleado && !formAgregarEmpleado.dataset.listenerAgregado) {
         
         // Carga de combos
-        const urlBase = 'https://localhost:7169/api/Additionals/'; 
+        const urlBase = 'https://localhost:9190/api/Additionals/'; 
         const promesasCombos = [   //Arreglo de promesas para cargar los combos
             //Se utiliza la funcion cargar combos, con parametros personalizads en cada combo
             cargarCombos(`${urlBase}Barrios`, 'empleado-barrio', 'idBarrio', 'descripcion', 'Seleccione un barrio...'),
@@ -611,7 +611,7 @@ async function setupFormEmpleadoListeners() {
                 
                 // --- Lógica PUT (Editar) ---
                 try {
-                    const url = `https://localhost:7169/api/Employees/${idEmpleado}`; // El PUT suele ir al ID
+                    const url = `https://localhost:9190/api/Employees/${idEmpleado}`; // El PUT suele ir al ID
                     const response = await fetch(url, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
@@ -655,7 +655,7 @@ async function setupFormEmpleadoListeners() {
                 
                 // --- Lógica POST (Agregar) ---
                 try {
-                    const url = 'https://localhost:7169/api/Employees';
+                    const url = 'https://localhost:9190/api/Employees';
                     const response = await fetch(url, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -691,7 +691,7 @@ async function setupFormEmpleadoListeners() {
 
         formAgregarEmpleado.reset();
         
-        const urlBase = 'https://localhost:7169/api/Additionals/'; 
+        const urlBase = 'https://localhost:9190/api/Additionals/'; 
         const promesasCombos = [   
             cargarCombos(`${urlBase}Barrios`, 'empleado-barrio', 'idBarrio', 'descripcion', 'Seleccione un barrio...'),
             cargarCombos(`${urlBase}Tipos-Contacto`, 'empleado-tipo-contacto', 'idTipoContacto', 'descripcion', 'Seleccione un tipo de contacto...'),

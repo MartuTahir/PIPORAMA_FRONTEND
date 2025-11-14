@@ -24,8 +24,8 @@ async function setupFormFacturaListeners() {
     if (formFactura && !formFactura.dataset.listenerAgregado) {
         
         console.log("Configurando formulario de facturas...");
-        const urlBase = 'https://localhost:7169/api/Additionals/';
-        const urlBasePersonas = 'https://localhost:7169/api/';
+        const urlBase = 'https://localhost:9190/api/Additionals/';
+        const urlBasePersonas = 'https://localhost:9190/api/';
         // --- Carga de Combos (Encabezado y Detalles) ---
         cargarCombosPersonas(`${urlBasePersonas}Clients`, 'factura-dni-cliente', 'dniCliente', 'nombre', 'apellido', 'Seleccione un Cliente...');
         cargarCombosPersonas(`${urlBasePersonas}Employees`, 'factura-dni-empleado', 'dniEmpleado', 'nomEmpleado', 'apeEmpleado', 'Seleccione un Empleado...');
@@ -424,7 +424,7 @@ async function buscarAsientos() {
     selectAsiento.innerHTML = '<option value="">Buscando asientos...</option>';
     
     try {
-        const url = `https://localhost:7169/api/Additionals/Asientos/disponibles/${idFuncion}`;
+        const url = `https://localhost:9190/api/Additionals/Asientos/disponibles/${idFuncion}`;
         const response = await fetch(url);
         if (!response.ok) { throw new Error('No se encontraron asientos'); }
         const asientos = await response.json();
@@ -589,7 +589,7 @@ async function guardarFactura() {
         }
 
         try{
-            const url = 'https://localhost:7169/api/Invoices'
+            const url = 'https://localhost:9190/api/Invoices'
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -671,7 +671,7 @@ async function buscarFacturas() {
     try {
         console.log('Buscando facturas para número de factura:', nroFactura);
 
-        const response = await fetch(`https://localhost:7169/api/Invoices/${nroFactura}`);
+        const response = await fetch(`https://localhost:9190/api/Invoices/${nroFactura}`);
         const facturaData = await response.json();
         
         // Convertir a array si es un objeto único
@@ -827,7 +827,7 @@ async function cargarFacturas() {
     try {
         console.log('Cargando facturas...');
         
-        const url = 'https://localhost:7169/api/Invoices';
+        const url = 'https://localhost:9190/api/Invoices';
         const response = await fetch(url);
         const facturas = await response.json();
 
@@ -1031,7 +1031,7 @@ async function eliminarFactura(facturaId) {
             });
             
             // Aquí deberías hacer la llamada a tu API para eliminar la factura
-            const url = `https://localhost:7169/api/Invoices/${facturaId}`;
+            const url = `https://localhost:9190/api/Invoices/${facturaId}`;
             const response = await fetch(url, {
                 method: 'DELETE',
                 headers: {

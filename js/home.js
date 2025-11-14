@@ -212,8 +212,3 @@ document.addEventListener('click', (e) => {
         }
     }
 });
-
-// Prevenir que el clic dentro del sidebar cierre el menú
-navbarNav.addEventListener('click', (e) => {
-    e.stopPropagation();
-});
