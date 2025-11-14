@@ -6,6 +6,7 @@ let chartEntradasDiaInstance = null;
 let chartPromedioSalasInstance = null;
 let chartFranjaHorariaInstance = null;
 let chartProductosTopInstance = null;
+let dashboardHandlersInstalled = false;
 
 /* Convierte string de moneda con comas a número */
 function parseCurrency(montoString) {
@@ -40,7 +41,15 @@ function getAllDatesInRange(startDate, endDate) {
 
 // Eventos Globales - DOMContentLoaded comentados por cada seccion
 document.addEventListener('DOMContentLoaded', function(){
+    if (document.getElementById('chartEntradasDia')) {
+        setupDashboardEventHandlers();
+        initDashboardInternal();
+    }
+});
 
+function setupDashboardEventHandlers() {
+    if (dashboardHandlersInstalled) return;
+    dashboardHandlersInstalled = true;
     // Solo ejecutar si estamos en la página del dashboard
     if (document.getElementById('chartEntradasDia')) {
         initDashboardInternal();
@@ -298,7 +307,7 @@ document.addEventListener('DOMContentLoaded', function(){
             console.error("Faltan elementos del DOM para el filtro de Productos.");
         }
     }
-});
+};
 
 /* GRAFICO #1 -- Recaudacion Entradas Total Por Dia */
 async function getEntradasVendidas(fechaDesde = null, fechaHasta = null) {
@@ -1002,6 +1011,7 @@ window.initDashboard = function() {
     }
     
     console.log("Elemento chartEntradasDia encontrado, inicializando dashboard...");
+    setupDashboardEventHandlers();
     clearExistingCharts();
     // Llamar a la función interna, no a sí misma
     initDashboardInternal();
@@ -1012,6 +1022,7 @@ document.addEventListener('pageChanged', function(event) {
     if (event.detail && event.detail.page === 'dashboard') {
         setTimeout(() => {
             if (document.getElementById('chartEntradasDia')) {
+                setupDashboardEventHandlers();
                 clearExistingCharts();
                 initDashboardInternal();
             }
