@@ -952,15 +952,15 @@ function setupHomeButtonsVisibility() {
     }
 }
 
-window.minions = function() {
-    Swal.fire({
-        title: '¡BANANA!',
-        html: '<img src="https://media.giphy.com/media/hjvBoWTABwwNi/giphy.gif" alt="Minion" style="width: 100%;">',
-        width: 600,
-        padding: '1em',
-        background: '#1e1d2c', // Tu color de fondo
-        color: '#ffffff',      // Tu color de texto
-        showConfirmButton: false, // Ocultamos el botón "OK"
-        showCloseButton: true     // Mostramos una 'X' para cerrar
-    });
-}
+// window.minions = function() {
+    // swal.fire({
+        // title: '¡banana!',
+        // html: '<img src="https://media.giphy.com/media/hjvbowtabwwni/giphy.gif" alt="minion" style="width: 100%;">',
+        // width: 600,
+        // padding: '1em',
+        // background: '#1e1d2c', // tu color de fondo
+        // color: '#ffffff',      // tu color de texto
+        // showconfirmbutton: false, // ocultamos el botón "ok"
+        // showclosebutton: true     // mostramos una 'x' para cerrar
+    // });
+// }
